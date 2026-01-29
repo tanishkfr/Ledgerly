@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Wallet, Settings, Zap, PieChart } from 'lucide-react';
+import { Home, Settings, Zap, PieChart, RefreshCw, Shield, TrendingUp } from 'lucide-react';
 import { motion, useMotionTemplate, useMotionValue, useSpring } from 'framer-motion';
 
 interface SidebarProps {
@@ -84,10 +84,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
         <Zap className="text-fluoro-yellow" size={32} strokeWidth={2.5} />
       </div>
 
-      <div className="flex flex-col gap-6 w-full px-4">
+      <div className="flex flex-col gap-4 w-full px-4">
+        {/* Priority Reorder */}
         <SidebarItem icon={Home} active={activeTab === 'dashboard'} onClick={() => onTabChange('dashboard')} />
-        <SidebarItem icon={Wallet} active={activeTab === 'wallet'} onClick={() => onTabChange('wallet')} />
         <SidebarItem icon={PieChart} active={activeTab === 'analytics'} onClick={() => onTabChange('analytics')} />
+        <SidebarItem icon={TrendingUp} active={activeTab === 'equities'} onClick={() => onTabChange('equities')} />
+        <SidebarItem icon={RefreshCw} active={activeTab === 'exchange'} onClick={() => onTabChange('exchange')} />
+        <SidebarItem icon={Shield} active={activeTab === 'insurance'} onClick={() => onTabChange('insurance')} />
         <SidebarItem icon={Settings} active={activeTab === 'settings'} onClick={() => onTabChange('settings')} />
       </div>
 

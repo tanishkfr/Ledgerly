@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Wallet, Settings, Zap, PieChart, TrendingUp } from 'lucide-react';
+import { Home, Settings, Zap, PieChart, TrendingUp, RefreshCw, Shield } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface NavigationDockProps {
@@ -10,7 +10,7 @@ interface NavigationDockProps {
 const DockItem = ({ icon: Icon, active = false, onClick, label }: { icon: any, active?: boolean, onClick: () => void, label: string }) => (
   <motion.button 
     onClick={onClick}
-    className="group relative flex flex-col items-center justify-center p-3"
+    className="group relative flex flex-col items-center justify-center p-2.5"
     whileHover={{ scale: 1.2, y: -5 }}
     whileTap={{ scale: 0.95 }}
     transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -23,12 +23,12 @@ const DockItem = ({ icon: Icon, active = false, onClick, label }: { icon: any, a
       />
     )}
     
-    <div className={`relative z-10 p-3 rounded-2xl transition-all duration-300 ${active ? 'bg-white/10 text-fluoro-yellow' : 'bg-transparent text-neutral-500 group-hover:text-white'}`}>
-      <Icon size={22} strokeWidth={active ? 2.5 : 2} />
+    <div className={`relative z-10 p-2 rounded-2xl transition-all duration-300 ${active ? 'bg-white/10 text-fluoro-yellow' : 'bg-transparent text-neutral-500 group-hover:text-white'}`}>
+      <Icon size={20} strokeWidth={active ? 2.5 : 2} />
     </div>
 
     {/* Tooltip Label */}
-    <div className="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-neutral-900 border border-neutral-800 text-[10px] font-mono text-white px-2 py-1 rounded pointer-events-none whitespace-nowrap">
+    <div className="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-neutral-900 border border-neutral-800 text-[10px] font-mono text-white px-2 py-1 rounded pointer-events-none whitespace-nowrap z-[100]">
       {label}
     </div>
   </motion.button>
@@ -37,17 +37,19 @@ const DockItem = ({ icon: Icon, active = false, onClick, label }: { icon: any, a
 export const NavigationDock: React.FC<NavigationDockProps> = ({ activeTab, onTabChange }) => {
   return (
     <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
-      <div className="flex items-center gap-2 px-4 py-2 bg-[#050505]/80 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl">
-        <div className="border-r border-white/10 pr-4 mr-2 flex items-center">
+      <div className="flex items-center gap-1 px-4 py-2 bg-[#050505]/80 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl">
+        <div className="border-r border-white/10 pr-4 mr-1 flex items-center">
              <Zap className="text-fluoro-yellow" size={20} fill="#D2FF00" />
         </div>
         
-        <div className="flex gap-2">
-            <DockItem icon={Home} label="OVERVIEW" active={activeTab === 'dashboard'} onClick={() => onTabChange('dashboard')} />
-            <DockItem icon={Wallet} label="ACCOUNTS" active={activeTab === 'wallet'} onClick={() => onTabChange('wallet')} />
-            <DockItem icon={TrendingUp} label="MARKETS" active={activeTab === 'equities'} onClick={() => onTabChange('equities')} />
+        <div className="flex gap-1">
+            {/* New IA Order: HOME -> DATA -> EQUITIES -> EXCHANGE -> INSURANCE -> SETTINGS */}
+            <DockItem icon={Home} label="HOME" active={activeTab === 'dashboard'} onClick={() => onTabChange('dashboard')} />
             <DockItem icon={PieChart} label="DATA" active={activeTab === 'analytics'} onClick={() => onTabChange('analytics')} />
-            <DockItem icon={Settings} label="SYSTEM" active={activeTab === 'settings'} onClick={() => onTabChange('settings')} />
+            <DockItem icon={TrendingUp} label="EQUITIES" active={activeTab === 'equities'} onClick={() => onTabChange('equities')} />
+            <DockItem icon={RefreshCw} label="EXCHANGE" active={activeTab === 'exchange'} onClick={() => onTabChange('exchange')} />
+            <DockItem icon={Shield} label="INSURANCE" active={activeTab === 'insurance'} onClick={() => onTabChange('insurance')} />
+            <DockItem icon={Settings} label="CONFIG" active={activeTab === 'settings'} onClick={() => onTabChange('settings')} />
         </div>
       </div>
     </div>

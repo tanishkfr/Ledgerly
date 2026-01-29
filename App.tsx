@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NavigationDock } from './components/NavigationDock';
+import { Sidebar } from './components/Sidebar';
 import { DashboardView } from './components/DashboardView';
 import { WalletView } from './components/WalletView';
 import { ProfileView } from './components/ProfileView'; 
 import { AnalyticsView } from './components/AnalyticsView';
 import { EquitiesView } from './components/EquitiesView';
+import { ExchangeView } from './components/ExchangeView';
+import { InsuranceView } from './components/InsuranceView';
 import { SplashScreen } from './components/SplashScreen';
 import { generateFinancialInsight } from './services/geminiService';
 import { createTransaction } from './services/transactionService';
-import { FinancialSummary, Transaction, UserProfile } from './types';
+import { FinancialSummary, UserProfile } from './types';
 import { NoiseOverlay } from './components/NoiseOverlay';
 import { BrandLogo } from './components/BrandLogo';
 import { Header } from './components/Header';
@@ -80,19 +83,12 @@ export default function App() {
 
   // --- Real-Time Data Polling Logic ---
   useEffect(() => {
-    // Function to simulate fetching updated financial metrics
     const fetchRealTimeMetrics = () => {
-      // Prevent updates during manual interactions to avoid UI jumps
       if (lastAddedTxId) return;
 
       setData(prevData => {
-        // 1. Simulate Market/Balance Fluctuation
-        // We use a randomized drift to simulate real-time value changes
         const volatility = (Math.random() - 0.5) * 150; 
         const newBalance = prevData.totalBalance + volatility;
-
-        // 2. Simulate Cash Flow Live Updates
-        // Updates the most recent data point to reflect "live" ingesting data
         const updatedCashFlow = [...prevData.cashFlowData];
         if (updatedCashFlow.length > 0) {
           const lastIdx = updatedCashFlow.length - 1;
@@ -102,19 +98,11 @@ export default function App() {
             value: Math.max(0, updatedCashFlow[lastIdx].value + flowDrift)
           };
         }
-
-        return {
-          ...prevData,
-          totalBalance: newBalance,
-          cashFlowData: updatedCashFlow
-        };
+        return { ...prevData, totalBalance: newBalance, cashFlowData: updatedCashFlow };
       });
     };
 
-    // Poll every 15 seconds
     const pollingInterval = setInterval(fetchRealTimeMetrics, 15000);
-
-    // Independent Latency Simulation (Cosmetic Network Status)
     const latencyInterval = setInterval(() => {
        setLatency(prev => Math.max(8, Math.min(45, prev + (Math.random() - 0.5) * 10)));
     }, 2000);
@@ -132,22 +120,15 @@ export default function App() {
       setInsight(result);
       setLoadingInsight(false);
     };
-    // Prefetch immediately (removed splash check to allow data loading in background)
     fetchInsight();
   }, []); 
 
-  // --- Transaction Handler ---
   const handleAddTransaction = (txData: any) => {
-    // 1. Process Data Update
     const updatedData = createTransaction(data, txData);
     setData(updatedData);
-
-    // 2. UX Feedback
     const newTxId = updatedData.recentTransactions[0].id;
     setLastAddedTxId(newTxId);
     triggerToast('SYSTEM_STATUS: TRANSACTION_RECORDED');
-
-    // 3. Cleanup Highlight after 3 seconds
     setTimeout(() => {
       setLastAddedTxId(null);
     }, 3000);
@@ -191,14 +172,19 @@ export default function App() {
             onShowToast={triggerToast}
           />
         );
-      case 'wallet':
-        return <WalletView data={data} />;
-      case 'equities':
-        return <EquitiesView />;
       case 'analytics':
         return <AnalyticsView data={data} />;
+      case 'equities':
+        return <EquitiesView />;
+      case 'exchange':
+        return <ExchangeView />;
+      case 'insurance':
+        return <InsuranceView />;
       case 'settings':
         return <ProfileView initialProfile={userProfile} onSave={handleUpdateProfile} />;
+      // Fallback or legacy support
+      case 'wallet':
+        return <WalletView data={data} />;
       default:
         return (
           <DashboardView 
@@ -220,20 +206,16 @@ export default function App() {
     <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-fluoro-yellow selection:text-black relative overflow-x-hidden antialiased flex flex-col">
       <NoiseOverlay />
 
-      {/* --- Intro Splash Screen --- */}
-      {/* Rendered on TOP (z-index managed in component) */}
       <AnimatePresence>
         {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
       </AnimatePresence>
 
-      {/* --- Global Transaction Modal --- */}
       <TransactionModal 
         isOpen={isTxModalOpen} 
         onClose={() => setIsTxModalOpen(false)}
         onSubmit={handleAddTransaction}
       />
       
-      {/* --- Global Balance Modal --- */}
       <BalanceModal 
         isOpen={isBalanceModalOpen}
         onClose={() => setIsBalanceModalOpen(false)}
@@ -241,7 +223,6 @@ export default function App() {
         onUpdate={handleUpdateBalance}
       />
 
-      {/* --- Global Success Toast --- */}
       <AnimatePresence>
         {showToast && (
           <motion.div 
@@ -257,8 +238,6 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* --- Main App Interface --- */}
-      {/* Always rendered underneath the Splash Screen */}
       <div className="flex-1 flex flex-col relative">
           {/* Atmosphere */}
           <div className="fixed top-0 right-0 w-[50vw] h-[50vh] bg-fluoro-yellow rounded-full blur-[200px] opacity-[0.03] pointer-events-none z-0" />
@@ -266,14 +245,14 @@ export default function App() {
              <BrandLogo size={600} />
           </div>
 
-          {/* Tier 1: Global Branding Header */}
           <Header 
             userProfile={userProfile} 
             latency={latency} 
             onNavigate={setActiveTab} 
           />
 
-          {/* Global Action Button (Floating FAB style for easy access) */}
+          <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
+
           <button 
              onClick={() => setIsTxModalOpen(true)}
              className="fixed bottom-24 right-6 z-[80] bg-fluoro-yellow text-black w-14 h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(210,255,0,0.4)] hover:scale-110 active:scale-95 active:shadow-[0_0_30px_rgba(210,255,0,0.6)] transition-all md:hidden border border-white/20"
@@ -281,13 +260,13 @@ export default function App() {
              <Plus size={28} strokeWidth={3} />
           </button>
 
-          {/* Navigation Dock */}
           <NavigationDock activeTab={activeTab} onTabChange={setActiveTab} />
           
-          {/* Main Content Area - Safe Zone Enforced */}
-          <main className="flex-1 w-full relative z-10 pt-24 px-6 md:px-12 pb-32">
+          {/* Main Content Area - "Zero-G" Spacing */}
+          {/* Header is 70px. pt-28 (112px) leaves ~42px visual gap. Perfect for Zero-G feel. */}
+          <main className="flex-1 w-full relative z-10 pt-28 px-6 md:px-12 md:pl-32 pb-32 transition-all duration-300">
             <motion.div
-              key={activeTab} // Triggers animation on tab change
+              key={activeTab}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
@@ -296,7 +275,6 @@ export default function App() {
               {renderContent()}
             </motion.div>
             
-            {/* Footer */}
             <footer className="w-full text-center py-12 z-10 relative mt-24">
                <div className="flex flex-col items-center gap-2">
                  <p className="text-[10px] font-mono text-neutral-600 tracking-widest">

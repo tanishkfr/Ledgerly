@@ -70,7 +70,7 @@ export const Header: React.FC<HeaderProps> = ({ userProfile, latency, onNavigate
           </div>
 
           {/* Profile Dropdown Toggle */}
-          <div className="relative">
+          <div className="relative ml-3">
             <button 
               onClick={() => setIsProfileOpen(!isProfileOpen)}
               className="w-9 h-9 rounded-full bg-neutral-900 border border-neutral-700 hover:border-fluoro-yellow transition-all flex items-center justify-center font-bold text-xs text-white group"

@@ -8,42 +8,49 @@ interface PageHeaderProps {
 }
 
 export const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle, actionElement }) => {
-  // Parse Title Logic: "CATEGORY.SUB"
+  // Logic: Split title by '.' to handle CATEGORY.SUB_PATH coloring
   const [category, sub] = title.includes('.') ? title.split('.') : [title, ''];
 
   return (
-    <div className="relative mb-10 pt-2 animate-in fade-in slide-in-from-top-4 duration-700">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-            <div className="flex items-center gap-4">
-                {/* Vertical Accent Bar */}
-                <motion.div 
-                    initial={{ height: 0 }}
-                    animate={{ height: '100%' }}
-                    transition={{ delay: 0.3, duration: 0.5 }}
-                    className="w-[2px] h-12 bg-fluoro-yellow shadow-[0_0_10px_#D2FF00]" 
-                />
+    <div className="relative w-full flex flex-col md:flex-row justify-between items-end gap-6 mb-12 animate-in fade-in slide-in-from-top-4 duration-700">
+        <div className="flex items-center">
+            {/* Vertical Accent Bar (2px #D2FF00) */}
+            <motion.div 
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: '3rem', opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.2, ease: "circOut" }}
+                className="w-[2px] bg-fluoro-yellow shadow-[0_0_15px_rgba(210,255,0,0.6)] mr-6" 
+            />
+            
+            <div>
+                {/* Title: Bold Monospace */}
+                <h1 className="text-3xl md:text-4xl font-mono font-bold tracking-tighter text-white uppercase leading-none">
+                    {category}
+                    {sub && <span className="text-fluoro-yellow">.{sub}</span>}
+                </h1>
                 
-                <div>
-                    <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white leading-none">
-                        {category}
-                        {sub && <span className="text-fluoro-yellow font-light">.{sub}</span>}
-                    </h1>
-                    <div className="flex items-center gap-2 mt-2">
-                         <div className="h-[1px] w-4 bg-neutral-700" />
-                         <p className="text-neutral-500 font-mono text-[10px] tracking-[0.2em] uppercase">
-                           {subtitle}
-                         </p>
-                    </div>
+                {/* Subtitle: 10px Muted Gray Metadata */}
+                <div className="flex items-center gap-3 mt-2">
+                     <p className="text-neutral-500 font-mono text-[10px] tracking-[0.2em] uppercase">
+                       {subtitle}
+                     </p>
+                     {/* Decorative connector */}
+                     <motion.div 
+                       initial={{ width: 0 }}
+                       animate={{ width: 40 }}
+                       transition={{ delay: 0.5, duration: 0.5 }}
+                       className="h-[1px] bg-neutral-800" 
+                     />
                 </div>
             </div>
-
-            {/* Optional Action Buttons */}
-            {actionElement && (
-                <div className="flex items-center gap-3">
-                    {actionElement}
-                </div>
-            )}
         </div>
+
+        {/* Action Buttons / Utility Area */}
+        {actionElement && (
+            <div className="flex items-center gap-3 mb-1">
+                {actionElement}
+            </div>
+        )}
     </div>
   );
 };
