@@ -47,7 +47,7 @@ Decentralized asset tracking featuring **Gas_Oracle** sonar pulses and **Micro-S
 
 ```bash
 # 1. Access the terminal
-git clone [https://github.com/your-username/ledgerly-os.git](https://github.com/your-username/ledgerly-os.git)
+git clone [https://github.com/tanishkfr/ledgerly.git](https://github.com/tanishkfr/ledgerly.git)
 
 # 2. Synchronize dependencies
 npm install
