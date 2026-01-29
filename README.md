@@ -10,11 +10,6 @@
 ## ⚡ SYSTEM_OVERVIEW
 Ledgerly is a high-fidelity Financial Command Center built on the principles of **Positive Friction** and **Information Density**. Moving beyond static data, v2.0 introduces a **Kinetic Scroll Engine** that transforms the user journey into a spatial experience.
 
-### 🪐 SPATIAL_NAVIGATION
-* **Horizontal Transitioning:** Sections like the *Exchange* and *Insurance Enclaves* utilize vertical-to-horizontal scroll mapping.
-* **Parallax Depth:** A multi-layered UI where the background "Digital Noise" and "Radial Glow" move at 0.2x speed relative to the foreground, creating a tactile glass effect.
-* **Entrance Logic:** Cards and charts perform a 20px Y-axis "snap" and 3D-tilt reveal only when they enter the active viewport.
-
 ---
 
 ## 🛠️ CORE_ENCLAVES
