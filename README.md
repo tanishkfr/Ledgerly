@@ -1,20 +1,61 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
-
-# Run and deploy your AI Studio app
-
-This contains everything you need to run your app locally.
-
-View your app in AI Studio: https://ai.studio/apps/drive/1DQYD4zmt4oZ68tX32I0JOVxQ_4iCK1rF
-
-## Run Locally
-
-**Prerequisites:**  Node.js
+# LEDGERLY // SPATIAL_FINANCIAL_OS
+> **STATUS:** SYSTEM_OPERATIONAL
+> **EDITION:** INDUSTRIAL_NOIR_v2.0
+> **UI_PARADIGM:** KINETIC_SCROLL / SPATIAL_BENTO
 
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+
+---
+
+## ⚡ SYSTEM_OVERVIEW
+Ledgerly is a high-fidelity Financial Command Center built on the principles of **Positive Friction** and **Information Density**. Moving beyond static data, v2.0 introduces a **Kinetic Scroll Engine** that transforms the user journey into a spatial experience.
+
+### 🪐 SPATIAL_NAVIGATION
+* **Horizontal Transitioning:** Sections like the *Exchange* and *Insurance Enclaves* utilize vertical-to-horizontal scroll mapping.
+* **Parallax Depth:** A multi-layered UI where the background "Digital Noise" and "Radial Glow" move at 0.2x speed relative to the foreground, creating a tactile glass effect.
+* **Entrance Logic:** Cards and charts perform a 20px Y-axis "snap" and 3D-tilt reveal only when they enter the active viewport.
+
+---
+
+## 🛠️ CORE_ENCLAVES
+
+### 01. VAULT [HOME]
+The primary liquidity nerve center. Featuring the **Hot_Storage** infinite-loop heartbeat and real-time **Capital Runway Forecasting**.
+
+
+### 02. EQUITIES [COMMAND]
+Traditional asset monitoring with **Volatility Jitter** detection and **Alpha_Vector** comparative charting against market benchmarks.
+
+### 03. INSURANCE [SHIELD]
+A defensive security enclave.
+* **Hex-Grid Coverage:** A hexagonal visualization of protected assets.
+* **Audit_Log:** A scrolling terminal feed of simulated network security sweeps and threat-vector mitigations.
+
+
+### 04. EXCHANGE [P2P]
+Decentralized asset tracking featuring **Gas_Oracle** sonar pulses and **Micro-Spark** line telemetry for high-velocity tokens.
+
+---
+
+## 🧬 TECHNICAL_SPECIFICATIONS
+
+| COMPONENT | TECHNOLOGY | SPEC |
+| :--- | :--- | :--- |
+| **Animation** | Framer Motion | useScroll / useTransform |
+| **Logic** | React 18 + TS | Functional Hooks |
+| **Styling** | Tailwind CSS | Industrial Noir Config |
+| **Performance** | CSS Masking | GPU-Accelerated Glow |
+
+---
+
+## 🚀 BOOT_SEQUENCE
+
+```bash
+# 1. Access the terminal
+git clone [https://github.com/your-username/ledgerly-os.git](https://github.com/your-username/ledgerly-os.git)
+
+# 2. Synchronize dependencies
+npm install
+
+# 3. Initialize Enclave
+npm run dev
