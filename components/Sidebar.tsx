@@ -7,7 +7,17 @@ interface SidebarProps {
   onTabChange: (tab: string) => void;
 }
 
-const SidebarItem = ({ icon: Icon, active = false, onClick }: { icon: any, active?: boolean, onClick: () => void }) => {
+const SidebarItem = ({ 
+  icon: Icon, 
+  active = false, 
+  onClick, 
+  label 
+}: { 
+  icon: any, 
+  active?: boolean, 
+  onClick: () => void,
+  label: string 
+}) => {
   // Spotlight Logic for Sidebar Items
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -27,13 +37,13 @@ const SidebarItem = ({ icon: Icon, active = false, onClick }: { icon: any, activ
     <motion.button 
       onClick={onClick}
       onMouseMove={handleMouseMove}
-      className="relative group cursor-pointer p-3 rounded-xl w-full flex justify-center overflow-hidden"
+      className="relative group cursor-pointer p-3 rounded-xl w-full flex justify-center items-center"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
       {/* Spotlight Glow Background */}
       <motion.div
-        className="pointer-events-none absolute -inset-px opacity-0 group-hover:opacity-100 transition duration-300"
+        className="pointer-events-none absolute -inset-px opacity-0 group-hover:opacity-100 transition duration-300 rounded-xl overflow-hidden"
         style={{
           background: useMotionTemplate`
             radial-gradient(
@@ -73,6 +83,16 @@ const SidebarItem = ({ icon: Icon, active = false, onClick }: { icon: any, activ
         size={24} 
         className={`relative z-10 transition-colors duration-200 ${active ? 'text-fluoro-yellow' : 'text-neutral-500 group-hover:text-white'}`} 
       />
+
+      {/* Hover Tooltip (Page Name) */}
+      <div className="absolute left-full ml-4 z-[60] pointer-events-none opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 ease-out">
+        <div className="bg-[#0A0A0A] border border-neutral-800 px-3 py-1.5 rounded-md shadow-[0_0_15px_rgba(0,0,0,0.5)] flex items-center whitespace-nowrap relative">
+           {/* Tiny Triangle Pointer */}
+           <div className="absolute left-0 top-1/2 -translate-x-[5px] -translate-y-1/2 w-2 h-2 bg-[#0A0A0A] border-l border-b border-neutral-800 rotate-45" />
+           
+           <span className="text-[10px] font-mono font-bold text-white tracking-widest">{label}</span>
+        </div>
+      </div>
     </motion.button>
   );
 };
@@ -86,12 +106,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
 
       <div className="flex flex-col gap-4 w-full px-4">
         {/* Priority Reorder */}
-        <SidebarItem icon={Home} active={activeTab === 'dashboard'} onClick={() => onTabChange('dashboard')} />
-        <SidebarItem icon={PieChart} active={activeTab === 'analytics'} onClick={() => onTabChange('analytics')} />
-        <SidebarItem icon={TrendingUp} active={activeTab === 'equities'} onClick={() => onTabChange('equities')} />
-        <SidebarItem icon={RefreshCw} active={activeTab === 'exchange'} onClick={() => onTabChange('exchange')} />
-        <SidebarItem icon={Shield} active={activeTab === 'insurance'} onClick={() => onTabChange('insurance')} />
-        <SidebarItem icon={Settings} active={activeTab === 'settings'} onClick={() => onTabChange('settings')} />
+        <SidebarItem label="HOME" icon={Home} active={activeTab === 'dashboard'} onClick={() => onTabChange('dashboard')} />
+        <SidebarItem label="DATA" icon={PieChart} active={activeTab === 'analytics'} onClick={() => onTabChange('analytics')} />
+        <SidebarItem label="EQUITIES" icon={TrendingUp} active={activeTab === 'equities'} onClick={() => onTabChange('equities')} />
+        <SidebarItem label="EXCHANGE" icon={RefreshCw} active={activeTab === 'exchange'} onClick={() => onTabChange('exchange')} />
+        <SidebarItem label="INSURANCE" icon={Shield} active={activeTab === 'insurance'} onClick={() => onTabChange('insurance')} />
+        <SidebarItem label="CONFIG" icon={Settings} active={activeTab === 'settings'} onClick={() => onTabChange('settings')} />
       </div>
 
       <div className="mt-auto">

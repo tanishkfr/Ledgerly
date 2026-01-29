@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { NavigationDock } from './components/NavigationDock';
 import { Sidebar } from './components/Sidebar';
 import { DashboardView } from './components/DashboardView';
 import { WalletView } from './components/WalletView';
@@ -259,12 +258,10 @@ export default function App() {
           >
              <Plus size={28} strokeWidth={3} />
           </button>
-
-          <NavigationDock activeTab={activeTab} onTabChange={setActiveTab} />
           
           {/* Main Content Area - "Zero-G" Spacing */}
           {/* Header is 70px. pt-28 (112px) leaves ~42px visual gap. Perfect for Zero-G feel. */}
-          <main className="flex-1 w-full relative z-10 pt-28 px-6 md:px-12 md:pl-32 pb-32 transition-all duration-300">
+          <main className="flex-1 w-full relative z-10 pt-28 px-6 md:px-12 md:pl-32 pb-24 transition-all duration-300">
             <motion.div
               key={activeTab}
               initial={{ opacity: 0, y: 10 }}
