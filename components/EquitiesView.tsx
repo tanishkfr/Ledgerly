@@ -282,6 +282,9 @@ const TradeCommitTerminal = () => {
 };
 
 const AlphaVectorChart = () => {
+    const [isMounted, setIsMounted] = useState(false);
+    useEffect(() => setIsMounted(true), []);
+
     const intersections = useMemo(() => {
         const points = [];
         for (let i = 1; i < CHART_DATA.length; i++) {
@@ -308,60 +311,62 @@ const AlphaVectorChart = () => {
                      </p>
                  </div>
                  
-                 <div className="flex-1 relative min-h-0 min-w-0">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={CHART_DATA}>
-                            <Tooltip 
-                                content={({ active, payload }) => {
-                                    if (active && payload && payload.length) {
-                                        return (
-                                            <div className="bg-black/90 border-l-2 border-fluoro-yellow p-2 shadow-[0_0_10px_rgba(210,255,0,0.1)]">
-                                                <div className="text-[9px] font-mono text-neutral-500 mb-1">SCANNING_BEAM_LOCKED</div>
-                                                <div className="text-sm font-bold text-white font-mono">
-                                                    {formatCurrency(payload[0].value as number)}
+                 <div className="flex-1 relative min-h-[250px] min-w-0">
+                    {isMounted && (
+                        <ResponsiveContainer width="99%" height="100%">
+                            <LineChart data={CHART_DATA}>
+                                <Tooltip 
+                                    content={({ active, payload }) => {
+                                        if (active && payload && payload.length) {
+                                            return (
+                                                <div className="bg-black/90 border-l-2 border-fluoro-yellow p-2 shadow-[0_0_10px_rgba(210,255,0,0.1)]">
+                                                    <div className="text-[9px] font-mono text-neutral-500 mb-1">SCANNING_BEAM_LOCKED</div>
+                                                    <div className="text-sm font-bold text-white font-mono">
+                                                        {formatCurrency(payload[0].value as number)}
+                                                    </div>
+                                                    <div className="text-[9px] font-mono text-neutral-500">
+                                                        IDX: {(payload[1].value as number).toFixed(2)}
+                                                    </div>
                                                 </div>
-                                                <div className="text-[9px] font-mono text-neutral-500">
-                                                    IDX: {(payload[1].value as number).toFixed(2)}
-                                                </div>
-                                            </div>
-                                        );
-                                    }
-                                    return null;
-                                }}
-                                cursor={{ stroke: '#444', strokeWidth: 1, strokeDasharray: '3 3' }} 
-                            />
-                            <Line 
-                                type="monotone" 
-                                dataKey="sp500" 
-                                stroke="#ffffff" 
-                                strokeWidth={1} 
-                                strokeOpacity={0.1} 
-                                dot={false}
-                                animationDuration={2000} 
-                            />
-                            <Line 
-                                type="monotone" 
-                                dataKey="portfolio" 
-                                stroke="#D2FF00" 
-                                strokeWidth={2} 
-                                strokeOpacity={0.8}
-                                dot={false}
-                                animationDuration={2500}
-                            />
-                            {intersections.map((point, i) => (
-                                <ReferenceDot 
-                                    key={i}
-                                    x={point.time}
-                                    y={point.portfolio}
-                                    r={3}
-                                    fill="#D2FF00"
-                                    stroke="none"
-                                >
-                                    <animate attributeName="opacity" from="0.6" to="0" dur="2s" begin="0s" repeatCount="indefinite" />
-                                </ReferenceDot>
-                            ))}
-                        </LineChart>
-                    </ResponsiveContainer>
+                                            );
+                                        }
+                                        return null;
+                                    }}
+                                    cursor={{ stroke: '#444', strokeWidth: 1, strokeDasharray: '3 3' }} 
+                                />
+                                <Line 
+                                    type="monotone" 
+                                    dataKey="sp500" 
+                                    stroke="#ffffff" 
+                                    strokeWidth={1} 
+                                    strokeOpacity={0.1} 
+                                    dot={false}
+                                    animationDuration={2000} 
+                                />
+                                <Line 
+                                    type="monotone" 
+                                    dataKey="portfolio" 
+                                    stroke="#D2FF00" 
+                                    strokeWidth={2} 
+                                    strokeOpacity={0.8}
+                                    dot={false}
+                                    animationDuration={2500}
+                                />
+                                {intersections.map((point, i) => (
+                                    <ReferenceDot 
+                                        key={i}
+                                        x={point.time}
+                                        y={point.portfolio}
+                                        r={3}
+                                        fill="#D2FF00"
+                                        stroke="none"
+                                    >
+                                        <animate attributeName="opacity" from="0.6" to="0" dur="2s" begin="0s" repeatCount="indefinite" />
+                                    </ReferenceDot>
+                                ))}
+                            </LineChart>
+                        </ResponsiveContainer>
+                    )}
 
                     {/* Scanning Line Effect (CSS) */}
                     <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
@@ -388,6 +393,9 @@ const AlphaVectorChart = () => {
 };
 
 const RiskCorrelationSpider = () => {
+    const [isMounted, setIsMounted] = useState(false);
+    useEffect(() => setIsMounted(true), []);
+
     return (
         <div className="h-[280px] w-full min-w-0 min-h-0 relative flex flex-col">
             <div className="flex justify-between items-start mb-4">
@@ -398,22 +406,24 @@ const RiskCorrelationSpider = () => {
                  <AlertTriangle size={12} className="text-neutral-700" />
             </div>
             
-            <div className="flex-1 -ml-6 min-h-0 min-w-0">
-                <ResponsiveContainer width="100%" height="100%">
-                    <RadarChart cx="50%" cy="50%" outerRadius="70%" data={RADAR_DATA}>
-                        <PolarGrid stroke="#1A1A1A" />
-                        <PolarAngleAxis dataKey="subject" tick={{ fill: '#333', fontSize: 8, fontFamily: 'JetBrains Mono' }} />
-                        <Radar
-                            name="Portfolio"
-                            dataKey="A"
-                            stroke="#D2FF00"
-                            strokeWidth={1}
-                            strokeOpacity={0.7}
-                            fill="#D2FF00"
-                            fillOpacity={0.05}
-                        />
-                    </RadarChart>
-                </ResponsiveContainer>
+            <div className="flex-1 -ml-6 min-h-[250px] min-w-0">
+                {isMounted && (
+                    <ResponsiveContainer width="99%" height="100%">
+                        <RadarChart cx="50%" cy="50%" outerRadius="70%" data={RADAR_DATA}>
+                            <PolarGrid stroke="#1A1A1A" />
+                            <PolarAngleAxis dataKey="subject" tick={{ fill: '#333', fontSize: 8, fontFamily: 'JetBrains Mono' }} />
+                            <Radar
+                                name="Portfolio"
+                                dataKey="A"
+                                stroke="#D2FF00"
+                                strokeWidth={1}
+                                strokeOpacity={0.7}
+                                fill="#D2FF00"
+                                fillOpacity={0.05}
+                            />
+                        </RadarChart>
+                    </ResponsiveContainer>
+                )}
             </div>
         </div>
     );

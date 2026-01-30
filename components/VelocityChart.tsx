@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
     ResponsiveContainer, 
     ComposedChart, 
@@ -11,7 +11,6 @@ import {
     Cell,
     LabelList 
 } from 'recharts';
-import { ChartDataPoint } from '../types';
 import { AlertCircle } from 'lucide-react';
 
 interface VelocityChartProps {
@@ -101,128 +100,143 @@ const AnomalyLabel = (props: any) => {
 
 export const VelocityChart: React.FC<VelocityChartProps> = ({ data, viewMode = 'TOTAL_VOLUME' }) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Mount Guard to ensure window exists before Recharts calculates dimensions
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   return (
-    <div className="w-full h-full min-h-0 min-w-0">
-        <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart
-                data={data}
-                margin={{ top: 20, right: 10, left: -15, bottom: 0 }}
-                onMouseMove={(state: any) => {
-                    if (state.isTooltipActive) {
-                        setActiveIndex(state.activeTooltipIndex);
-                    } else {
-                        setActiveIndex(null);
-                    }
-                }}
-                onMouseLeave={() => setActiveIndex(null)}
-            >
-                <defs>
-                  <filter id="neonGlow" height="300%" width="300%" x="-75%" y="-75%">
-                    <feGaussianBlur stdDeviation="5" result="coloredBlur" />
-                    <feMerge>
-                      <feMergeNode in="coloredBlur" />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
-                  <pattern id="diagonalHatch" width="4" height="4" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
-                    <line x1="0" y1="0" x2="0" y2="4" style={{stroke:'#D2FF00', strokeWidth:1, opacity: 0.3}} />
-                  </pattern>
-                </defs>
-
-                <CartesianGrid 
-                    vertical={false} 
-                    stroke="#1A1A1A" 
-                    strokeDasharray="3 3" 
-                />
-                
-                <XAxis 
-                    dataKey="name" 
-                    tick={{ fill: '#666', fontSize: 10, fontFamily: 'JetBrains Mono' }} 
-                    axisLine={false}
-                    tickLine={false}
-                    dy={15}
-                    interval="preserveStartEnd"
-                />
-                
-                <YAxis 
-                    tick={{ fill: '#666', fontSize: 10, fontFamily: 'JetBrains Mono' }} 
-                    axisLine={false}
-                    tickLine={false}
-                    tickFormatter={(val) => `$${(val / 1000).toFixed(0)}k`}
-                />
-                
-                <Tooltip 
-                    content={<CustomTooltip />}
-                    cursor={<CustomCursor stroke="#D2FF00" />}
-                    isAnimationActive={false}
-                    offset={25}
-                    allowEscapeViewBox={{ x: true, y: true }}
-                />
-
-                {/* Predictive Drift Trendline */}
-                <Line 
-                    type="monotone" 
-                    dataKey="trendValue" 
-                    stroke="#D2FF00" 
-                    strokeWidth={1} 
-                    strokeDasharray="4 4" 
-                    dot={false}
-                    activeDot={false}
-                    opacity={0.5}
-                    animationDuration={2000}
-                />
-                
-                <Bar 
-                    dataKey="value" 
-                    animationDuration={1500}
-                    animationEasing="ease-out"
-                >
-                    {data.map((entry, index) => {
-                        const isForecast = entry.type === 'FORECAST';
-                        const isHovered = activeIndex === index;
-                        
-                        // Style Logic
-                        let fill = '#1A1A1A';
-                        let stroke = 'transparent';
-                        let opacity = 1;
-                        let strokeWidth = 0;
-
-                        if (viewMode === 'NET_BURN') {
-                            fill = 'transparent';
-                            stroke = '#D2FF00';
-                            strokeWidth = 1;
+    // Size Guard: Min-height ensures the container is never 0px high, even if flex parent collapses
+    <div className="w-full h-full min-h-[300px] relative">
+        {isMounted ? (
+            // 99% Width Hack: Forces Recharts to recalculate properly inside flex containers
+            <ResponsiveContainer width="99%" height="100%">
+                <ComposedChart
+                    data={data}
+                    margin={{ top: 20, right: 10, left: -15, bottom: 0 }}
+                    onMouseMove={(state: any) => {
+                        if (state.isTooltipActive) {
+                            setActiveIndex(state.activeTooltipIndex);
                         } else {
-                            // Total Volume Mode
-                            fill = isHovered ? '#D2FF00' : '#1A1A1A';
+                            setActiveIndex(null);
                         }
+                    }}
+                    onMouseLeave={() => setActiveIndex(null)}
+                >
+                    <defs>
+                      <filter id="neonGlow" height="300%" width="300%" x="-75%" y="-75%">
+                        <feGaussianBlur stdDeviation="5" result="coloredBlur" />
+                        <feMerge>
+                          <feMergeNode in="coloredBlur" />
+                          <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                      </filter>
+                      <pattern id="diagonalHatch" width="4" height="4" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+                        <line x1="0" y1="0" x2="0" y2="4" style={{stroke:'#D2FF00', strokeWidth:1, opacity: 0.3}} />
+                      </pattern>
+                    </defs>
 
-                        if (isForecast) {
-                            opacity = 0.3;
-                            fill = 'url(#diagonalHatch)'; // Texture for forecast
-                            stroke = '#D2FF00';
-                            strokeWidth = 1;
-                        }
+                    <CartesianGrid 
+                        vertical={false} 
+                        stroke="#1A1A1A" 
+                        strokeDasharray="3 3" 
+                    />
+                    
+                    <XAxis 
+                        dataKey="name" 
+                        tick={{ fill: '#666', fontSize: 10, fontFamily: 'JetBrains Mono' }} 
+                        axisLine={false}
+                        tickLine={false}
+                        dy={15}
+                        interval="preserveStartEnd"
+                    />
+                    
+                    <YAxis 
+                        tick={{ fill: '#666', fontSize: 10, fontFamily: 'JetBrains Mono' }} 
+                        axisLine={false}
+                        tickLine={false}
+                        tickFormatter={(val) => `$${(val / 1000).toFixed(0)}k`}
+                    />
+                    
+                    <Tooltip 
+                        content={<CustomTooltip />}
+                        cursor={<CustomCursor stroke="#D2FF00" />}
+                        isAnimationActive={false}
+                        offset={25}
+                        allowEscapeViewBox={{ x: true, y: true }}
+                    />
 
-                        return (
-                            <Cell 
-                                key={`cell-${index}`} 
-                                fill={fill}
-                                stroke={stroke}
-                                strokeWidth={strokeWidth}
-                                fillOpacity={opacity}
-                                filter={isHovered && !isForecast ? "url(#neonGlow)" : ""}
-                                style={{ 
-                                    transition: 'all 0.3s ease', 
-                                    cursor: 'crosshair'
-                                }}
-                            />
-                        );
-                    })}
-                    <LabelList dataKey="value" content={<AnomalyLabel />} />
-                </Bar>
-            </ComposedChart>
-        </ResponsiveContainer>
+                    {/* Predictive Drift Trendline */}
+                    <Line 
+                        type="monotone" 
+                        dataKey="trendValue" 
+                        stroke="#D2FF00" 
+                        strokeWidth={1} 
+                        strokeDasharray="4 4" 
+                        dot={false}
+                        activeDot={false}
+                        opacity={0.5}
+                        animationDuration={2000}
+                    />
+                    
+                    <Bar 
+                        dataKey="value" 
+                        animationDuration={1500}
+                        animationEasing="ease-out"
+                    >
+                        {data.map((entry, index) => {
+                            const isForecast = entry.type === 'FORECAST';
+                            const isHovered = activeIndex === index;
+                            
+                            // Style Logic
+                            let fill = '#1A1A1A';
+                            let stroke = 'transparent';
+                            let opacity = 1;
+                            let strokeWidth = 0;
+
+                            if (viewMode === 'NET_BURN') {
+                                fill = 'transparent';
+                                stroke = '#D2FF00';
+                                strokeWidth = 1;
+                            } else {
+                                // Total Volume Mode
+                                fill = isHovered ? '#D2FF00' : '#1A1A1A';
+                            }
+
+                            if (isForecast) {
+                                opacity = 0.3;
+                                fill = 'url(#diagonalHatch)'; // Texture for forecast
+                                stroke = '#D2FF00';
+                                strokeWidth = 1;
+                            }
+
+                            return (
+                                <Cell 
+                                    key={`cell-${index}`} 
+                                    fill={fill}
+                                    stroke={stroke}
+                                    strokeWidth={strokeWidth}
+                                    fillOpacity={opacity}
+                                    filter={isHovered && !isForecast ? "url(#neonGlow)" : ""}
+                                    style={{ 
+                                        transition: 'all 0.3s ease', 
+                                        cursor: 'crosshair'
+                                    }}
+                                />
+                            );
+                        })}
+                        <LabelList dataKey="value" content={<AnomalyLabel />} />
+                    </Bar>
+                </ComposedChart>
+            </ResponsiveContainer>
+        ) : (
+             // Placeholder during measuring phase to maintain layout stability
+            <div className="w-full h-full flex items-center justify-center bg-neutral-900/10 rounded-lg">
+                <span className="text-[10px] font-mono text-neutral-600 animate-pulse">INITIALIZING_METRICS...</span>
+            </div>
+        )}
     </div>
   );
 };

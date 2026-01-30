@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ResponsiveContainer, AreaChart, Area, Tooltip, XAxis } from 'recharts';
 import { ChartDataPoint } from '../types';
 import { formatCurrency } from '../utils';
@@ -22,51 +22,61 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export const SparklineChart: React.FC<SparklineChartProps> = ({ data }) => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
-    <div className="w-full h-full min-h-[150px] min-w-0 min-h-0 relative overflow-hidden rounded-lg group">
-      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-        <AreaChart data={data}>
-          <defs>
-            <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#D2FF00" stopOpacity={0.3}/>
-              <stop offset="95%" stopColor="#D2FF00" stopOpacity={0}/>
-            </linearGradient>
-            <filter id="glow" height="300%" width="300%" x="-75%" y="-75%">
-              <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-              <feMerge>
-                <feMergeNode in="coloredBlur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
-          <XAxis 
-            dataKey="name" 
-            hide 
-          />
-          <Tooltip 
-            content={<CustomTooltip />} 
-            cursor={{ 
-              stroke: '#D2FF00', 
-              strokeWidth: 1, 
-              strokeDasharray: '4 4',
-              strokeOpacity: 0.8
-            }} 
-            isAnimationActive={false}
-          />
-          <Area 
-            type="monotone" 
-            dataKey="value" 
-            stroke="#D2FF00" 
-            strokeWidth={2}
-            fillOpacity={1} 
-            fill="url(#colorValue)" 
-            filter="url(#glow)"
-            isAnimationActive={true}
-            animationDuration={2000}
-            animationEasing="ease-out"
-          />
-        </AreaChart>
-      </ResponsiveContainer>
+    // Size Guard: Fixed min-height ensures chart has dimension to render into
+    <div className="w-full h-full min-h-[150px] min-w-0 relative overflow-hidden rounded-lg group">
+      {isMounted && (
+        // 99% Width Hack: Prevents resize loops in flex/grid
+        <ResponsiveContainer width="99%" height="100%">
+            <AreaChart data={data}>
+            <defs>
+                <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#D2FF00" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="#D2FF00" stopOpacity={0}/>
+                </linearGradient>
+                <filter id="glow" height="300%" width="300%" x="-75%" y="-75%">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                <feMerge>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
+                </feMerge>
+                </filter>
+            </defs>
+            <XAxis 
+                dataKey="name" 
+                hide 
+            />
+            <Tooltip 
+                content={<CustomTooltip />} 
+                cursor={{ 
+                stroke: '#D2FF00', 
+                strokeWidth: 1, 
+                strokeDasharray: '4 4',
+                strokeOpacity: 0.8
+                }} 
+                isAnimationActive={false}
+            />
+            <Area 
+                type="monotone" 
+                dataKey="value" 
+                stroke="#D2FF00" 
+                strokeWidth={2}
+                fillOpacity={1} 
+                fill="url(#colorValue)" 
+                filter="url(#glow)"
+                isAnimationActive={true}
+                animationDuration={2000}
+                animationEasing="ease-out"
+            />
+            </AreaChart>
+        </ResponsiveContainer>
+      )}
     </div>
   );
 };
