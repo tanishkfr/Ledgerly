@@ -368,7 +368,7 @@ const ExecutionTerminal = () => {
                         </div>
                      </div>
 
-                     <button className="w-full py-4 bg-transparent border border-fluoro-yellow text-fluoro-yellow font-bold text-[10px] uppercase tracking-[0.15em] rounded-xl hover:bg-fluoro-yellow hover:text-black transition-all shadow-[0_0_15px_rgba(210,255,0,0.1)] hover:shadow-[0_0_25px_rgba(210,255,0,0.4)] relative overflow-hidden group mt-2">
+                     <button className="w-full py-4 bg-transparent text-fluoro-yellow font-bold text-[10px] uppercase tracking-[0.15em] rounded-xl hover:bg-fluoro-yellow hover:text-black transition-all shadow-[inset_0_0_0_1px_#D2FF00] hover:shadow-[inset_0_0_0_1px_#D2FF00,0_0_25px_rgba(210,255,0,0.4)] relative overflow-hidden group mt-2">
                           <span className="relative z-10">INITIATE_ATOMIC_SWAP</span>
                           <div className="absolute inset-0 bg-fluoro-yellow/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                      </button>
@@ -427,7 +427,7 @@ export const ExchangeView: React.FC = () => {
 
   return (
     <motion.div 
-      className="w-full pb-24"
+      className="w-full pb-24 isolate"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -444,39 +444,38 @@ export const ExchangeView: React.FC = () => {
          }
        />
 
-       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 isolate">
           
           {/* 1. Hot & Cold Enclaves */}
-          <div className="lg:col-span-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="lg:col-span-12 grid grid-cols-1 md:grid-cols-2 gap-6 isolate">
               
               {/* Hot Wallet */}
               <motion.div 
                 variants={itemVariants}
                 onMouseEnter={() => setIsHoveredHotWallet(true)}
                 onMouseLeave={() => setIsHoveredHotWallet(false)}
+                className="relative group rounded-2xl p-6 bg-[#0A0A0A] border border-white/10 transition-all duration-200 ease-out hover:border-transparent hover:shadow-[inset_0_0_0_1px_#D2FF00,inset_0_0_15px_rgba(210,255,0,0.1)]"
               >
-                  <GlowCard className="rounded-2xl p-6 relative bg-[#080808]">
-                      <div className="flex justify-between items-start mb-8">
-                          <div className="flex items-center gap-3">
-                              <div className="p-2 bg-neutral-900 rounded-lg border border-neutral-800">
-                                  <Unlock size={18} className="text-fluoro-yellow" />
-                              </div>
-                              <div>
-                                  <h3 className="text-sm font-bold text-white">Hot Storage</h3>
-                                  <div className="text-[9px] font-mono text-neutral-500 flex items-center gap-1">
-                                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" /> ONLINE
-                                  </div>
-                              </div>
+                  <div className="flex justify-between items-start mb-8 relative z-10">
+                      <div className="flex items-center gap-3">
+                          <div className="p-2 bg-neutral-900 rounded-lg border border-neutral-800">
+                              <Unlock size={18} className="text-fluoro-yellow" />
                           </div>
-                          <div className="text-right">
-                              <div className="text-2xl font-bold text-white font-mono tracking-tight">$14,240.50</div>
-                              <div className="text-[9px] font-mono text-neutral-500">LIQUID_ASSETS</div>
+                          <div>
+                              <h3 className="text-sm font-bold text-white">Hot Storage</h3>
+                              <div className="text-[9px] font-mono text-neutral-500 flex items-center gap-1">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" /> ONLINE
+                              </div>
                           </div>
                       </div>
+                      <div className="text-right">
+                          <div className="text-2xl font-bold text-white font-mono tracking-tight">$14,240.50</div>
+                          <div className="text-[9px] font-mono text-neutral-500">LIQUID_ASSETS</div>
+                      </div>
+                  </div>
 
-                      {/* System Diagnostic Graph (Replaces static loop) */}
-                      <SystemDiagnosticGraph isHovered={isHoveredHotWallet} />
-                  </GlowCard>
+                  {/* System Diagnostic Graph (Replaces static loop) */}
+                  <SystemDiagnosticGraph isHovered={isHoveredHotWallet} />
               </motion.div>
 
               {/* Cold Vault */}
@@ -510,7 +509,7 @@ export const ExchangeView: React.FC = () => {
           </div>
 
           {/* 2. Token Matrix with Whale Watch */}
-          <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4 isolate">
              <AssetCard symbol="ETH" name="Ethereum" price={3420.50} change={2.4} />
              <AssetCard symbol="SOL" name="Solana" price={148.10} change={8.5} />
              <AssetCard symbol="BTC" name="Bitcoin" price={67100.00} change={-0.5} />

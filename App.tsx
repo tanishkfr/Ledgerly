@@ -48,11 +48,12 @@ const INITIAL_PROFILE: UserProfile = {
   email: 'john.doe@ledgerly.com',
   role: 'Senior Freelancer',
   twoFactor: true,
-  apiKey: 'pk_live_51M...',
+  apiKey: 'sk_live_DEMO_MODE_ACTIVE', // Mock Key for display
   initials: 'JD'
 };
 
 export default function App() {
+  const [mounted, setMounted] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [data, setData] = useState<FinancialSummary>(INITIAL_DATA);
@@ -72,6 +73,17 @@ export default function App() {
   const { scrollY } = useScroll();
   const backgroundY = useTransform(scrollY, [0, 1000], [0, 200]); // 0.2x speed
   const opacityFade = useTransform(scrollY, [0, 300], [0.03, 0.01]);
+
+  // Client-side Mount Guard
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // --- GLOBAL SCROLL TO TOP BEHAVIOR ---
+  useEffect(() => {
+    // Instant scroll to top on tab change for "fresh page" feel
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [activeTab]);
 
   const handleSplashComplete = () => {
     setShowSplash(false);
@@ -202,6 +214,9 @@ export default function App() {
         );
     }
   };
+
+  // Prevent render until mounted to ensure window/document are available
+  if (!mounted) return <div className="min-h-screen bg-[#050505]" />;
 
   return (
     <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-fluoro-yellow selection:text-black relative overflow-x-hidden antialiased flex flex-col">

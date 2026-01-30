@@ -338,7 +338,7 @@ export const WalletView: React.FC<WalletViewProps> = ({ data }) => {
 
   return (
     <motion.div 
-      className="w-full flex flex-col gap-8 relative"
+      className="w-full flex flex-col gap-8 relative isolate"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -358,7 +358,7 @@ export const WalletView: React.FC<WalletViewProps> = ({ data }) => {
         subtitle="ACTIVE_SECURITY_VAULT"
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 isolate">
         {/* Left Column: Cards, Burn Rate */}
         <div className="lg:col-span-2 space-y-8">
           
@@ -380,7 +380,7 @@ export const WalletView: React.FC<WalletViewProps> = ({ data }) => {
               </div>
               
               <motion.div 
-                className="grid grid-cols-1 md:grid-cols-2 gap-6 perspective-[2000px]"
+                className="grid grid-cols-1 md:grid-cols-2 gap-6 perspective-[2000px] isolate"
                 variants={vaultContainerVariants}
                 initial="hidden"
                 animate="show"

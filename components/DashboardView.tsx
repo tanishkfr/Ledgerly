@@ -228,7 +228,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   return (
     <motion.div 
-      className="w-full min-h-screen grid grid-cols-1 xl:grid-cols-12 gap-8 pb-12"
+      className="w-full min-h-screen grid grid-cols-1 xl:grid-cols-12 gap-8 pb-12 isolate"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -268,7 +268,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           />
 
           {/* 2. Micro-KPI Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 isolate">
              <MicroKPICard title="TOTAL_REVENUE" value={19270.56} delta="+8%" icon={DollarSign} />
              <MicroKPICard title="SAVINGS_VELOCITY" value={8420.00} delta="+12%" icon={Layers} />
              <MicroKPICard title="MONTHLY_EXPENSE" value={3450.20} delta="-4%" icon={Zap} />
@@ -300,7 +300,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </GlowCard>
 
           {/* 4. Bottom Grid (Table + Radial) */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 isolate">
              {/* Recent Transactions Table */}
              <div className="lg:col-span-2">
                <GlowCard variants={itemVariants} className="rounded-2xl p-6 flex flex-col h-full">

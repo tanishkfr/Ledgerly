@@ -57,11 +57,11 @@ const Hexagon = ({ active, delay }: { active: boolean, delay: number }) => (
             scale: 1.15, 
             z: 50,
             y: -15,
-            filter: "brightness(1.5)" 
+            filter: "brightness(1.5)",
+            transition: { duration: 0.3 }
         }}
         transition={{ 
-            default: { type: "spring", stiffness: 200, damping: 15, delay },
-            hover: { duration: 0.3 }
+            type: "spring", stiffness: 200, damping: 15, delay 
         }}
         style={{ transformStyle: "preserve-3d" }}
         className="relative w-12 h-14 cursor-pointer group"

@@ -5,7 +5,7 @@ import {
   LineChart, 
   Line, 
   Tooltip, 
-  ReferenceDot,
+  ReferenceDot, 
   RadarChart, 
   PolarGrid, 
   PolarAngleAxis, 
@@ -477,7 +477,7 @@ const GlobalIndicesTicker = () => {
 export const EquitiesView: React.FC = () => {
   return (
     <motion.div 
-      className="w-full pb-24"
+      className="w-full pb-24 isolate"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -492,7 +492,7 @@ export const EquitiesView: React.FC = () => {
        <ExposureRail />
 
        {/* Asymmetrical Bento Grid */}
-       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
+       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6 isolate">
            
            {/* Tier 1: Alpha Vector (Chart) */}
            <motion.div variants={itemVariants} className="lg:col-span-9">
@@ -522,7 +522,7 @@ export const EquitiesView: React.FC = () => {
                    <span className="text-[9px] font-mono text-neutral-600">FILTER: ALL_ASSETS</span>
                </div>
                
-               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 isolate">
                    {HEATMAP_DATA.map((asset) => {
                        return (
                            <GlowCard

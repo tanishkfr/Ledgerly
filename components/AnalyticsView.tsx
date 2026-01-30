@@ -29,7 +29,7 @@ const itemVariants: Variants = {
 
 const KPICard = ({ title, value, sub, icon: Icon }: { title: string, value: string, sub: string, icon: any }) => (
   <motion.div variants={itemVariants} className="h-full">
-      <GlowCard className="rounded-2xl p-6 relative overflow-hidden group h-full">
+      <GlowCard className="rounded-2xl p-6 relative group h-full">
         <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-40 transition-opacity">
         <Icon size={40} className="text-neutral-500" />
         </div>
@@ -106,7 +106,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ data }) => {
 
   return (
     <motion.div 
-      className="w-full pb-24"
+      className="w-full pb-24 isolate"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -118,10 +118,10 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ data }) => {
       />
 
       {/* Bento Grid Layout */}
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6 isolate">
         
         {/* KPI Row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 isolate">
            <KPICard 
               title="LIQUIDITY_INDEX" 
               value="94.2%" 
