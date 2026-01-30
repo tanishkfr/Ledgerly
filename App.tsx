@@ -256,6 +256,7 @@ export default function App() {
       </AnimatePresence>
 
       <div className="flex-1 flex flex-col relative z-10">
+          {/* Header aligns with main content grid */}
           <Header 
             userProfile={userProfile} 
             latency={latency} 
@@ -271,18 +272,19 @@ export default function App() {
              <Plus size={28} strokeWidth={3} />
           </button>
           
-          <main className="flex-1 w-full relative z-10 pt-28 px-6 md:px-12 md:pl-32 pb-24 transition-all duration-300">
+          {/* Main Content Anchor: 1440px Max Width, Centered, Sidebar Aware */}
+          <main className="flex-1 w-full relative z-10 pt-28 px-6 md:pr-12 md:pl-32 pb-24 transition-all duration-300">
             <motion.div
               key={activeTab}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="w-full max-w-[1400px] mx-auto"
+              className="w-full max-w-[1440px] mx-auto"
             >
               {renderContent()}
             </motion.div>
             
-            <footer className="w-full text-center py-12 z-10 relative mt-24">
+            <footer className="w-full text-center py-12 z-10 relative mt-24 max-w-[1440px] mx-auto">
                <div className="flex flex-col items-center gap-2">
                  <p className="text-[10px] font-mono text-neutral-600 tracking-widest">
                    © 2026 LEDGERLY SYSTEMS. ALL RIGHTS RESERVED.

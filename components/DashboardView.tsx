@@ -212,7 +212,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col xl:flex-row gap-8 pb-12">
+    <div className="w-full min-h-screen grid grid-cols-1 xl:grid-cols-12 gap-8 pb-12">
        
        <style>{`
          @keyframes scanBeamVertical {
@@ -223,8 +223,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
          }
        `}</style>
 
-       {/* --- Main Telemetry Area (75%) --- */}
-       <div className="flex-1 flex flex-col gap-6">
+       {/* --- Main Telemetry Area (9 cols) --- */}
+       <div className="xl:col-span-9 flex flex-col gap-6">
           
           <PageHeader 
              title="SYSTEM.MONITOR" 
@@ -368,8 +368,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
        </div>
 
-       {/* --- Right-Side Utility Rail (25%) --- */}
-       <div className="w-full xl:w-[320px] shrink-0">
+       {/* --- Right-Side Utility Rail (3 cols) --- */}
+       <div className="xl:col-span-3 w-full shrink-0">
           <UtilityRail 
             totalBalance={data.totalBalance} 
             userName={userProfile.fullName}
