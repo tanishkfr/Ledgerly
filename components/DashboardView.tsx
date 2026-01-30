@@ -320,7 +320,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                      <Activity size={14} className="text-neutral-500" />
                   </div>
                   
-                  <div className="flex-1 flex items-center justify-center relative min-h-[250px]">
+                  {/* Fixed Height Wrapper for ResponsiveContainer */}
+                  <div className="h-[250px] w-full relative min-w-0 min-h-0 flex items-center justify-center">
                      <ResponsiveContainer width="100%" height="100%">
                         <RePieChart>
                            <Pie

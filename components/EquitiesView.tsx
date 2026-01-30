@@ -282,9 +282,9 @@ const AlphaVectorChart = () => {
     const performance = (lastPoint.portfolio - lastPoint.sp500) / lastPoint.sp500;
 
     return (
-        <div className="h-[300px] w-full flex">
+        <div className="h-[300px] w-full flex min-w-0 min-h-0">
              {/* Chart Area */}
-             <div className="flex-1 relative group flex flex-col">
+             <div className="flex-1 relative group flex flex-col min-w-0 min-h-0">
                  <div className="absolute top-4 left-4 z-10">
                      <h3 className="text-sm font-bold text-white">Alpha_Vector</h3>
                      <p className="text-[10px] font-mono text-neutral-600 uppercase tracking-widest">
@@ -292,7 +292,7 @@ const AlphaVectorChart = () => {
                      </p>
                  </div>
                  
-                 <div className="flex-1 relative">
+                 <div className="flex-1 relative min-h-0 min-w-0">
                     <ResponsiveContainer width="100%" height="100%">
                         <LineChart data={CHART_DATA}>
                             <Tooltip 
@@ -373,7 +373,7 @@ const AlphaVectorChart = () => {
 
 const RiskCorrelationSpider = () => {
     return (
-        <div className="h-full min-h-[250px] relative flex flex-col">
+        <div className="h-[280px] w-full min-w-0 min-h-0 relative flex flex-col">
             <div className="flex justify-between items-start mb-4">
                  <div>
                     <h3 className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">Risk_Spider</h3>
@@ -382,7 +382,7 @@ const RiskCorrelationSpider = () => {
                  <AlertTriangle size={12} className="text-neutral-700" />
             </div>
             
-            <div className="flex-1 -ml-6">
+            <div className="flex-1 -ml-6 min-h-0 min-w-0">
                 <ResponsiveContainer width="100%" height="100%">
                     <RadarChart cx="50%" cy="50%" outerRadius="70%" data={RADAR_DATA}>
                         <PolarGrid stroke="#1A1A1A" />

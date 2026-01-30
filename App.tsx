@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Sidebar } from './components/Sidebar';
 import { DashboardView } from './components/DashboardView';
 import { WalletView } from './components/WalletView';
@@ -7,7 +7,6 @@ import { ProfileView } from './components/ProfileView';
 import { AnalyticsView } from './components/AnalyticsView';
 import { EquitiesView } from './components/EquitiesView';
 import { ExchangeView } from './components/ExchangeView';
-import { InsuranceView } from './components/InsuranceView';
 import { SplashScreen } from './components/SplashScreen';
 import { generateFinancialInsight } from './services/geminiService';
 import { createTransaction } from './services/transactionService';
@@ -68,6 +67,11 @@ export default function App() {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('SYSTEM_STATUS: SUCCESS');
   const [lastAddedTxId, setLastAddedTxId] = useState<string | null>(null);
+
+  // Parallax Logic
+  const { scrollY } = useScroll();
+  const backgroundY = useTransform(scrollY, [0, 1000], [0, 200]); // 0.2x speed
+  const opacityFade = useTransform(scrollY, [0, 300], [0.03, 0.01]);
 
   const handleSplashComplete = () => {
     setShowSplash(false);
@@ -177,8 +181,6 @@ export default function App() {
         return <EquitiesView />;
       case 'exchange':
         return <ExchangeView />;
-      case 'insurance':
-        return <InsuranceView />;
       case 'settings':
         return <ProfileView initialProfile={userProfile} onSave={handleUpdateProfile} />;
       // Fallback or legacy support
@@ -203,7 +205,23 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-fluoro-yellow selection:text-black relative overflow-x-hidden antialiased flex flex-col">
-      <NoiseOverlay />
+      <div className="fixed inset-0 z-0 pointer-events-none">
+          {/* Parallax Noise Layer */}
+          <motion.div style={{ y: backgroundY }} className="absolute inset-0">
+             <NoiseOverlay />
+          </motion.div>
+          
+          {/* Parallax Atmosphere */}
+          <motion.div 
+            style={{ y: backgroundY, opacity: opacityFade }}
+            className="fixed top-0 right-0 w-[50vw] h-[50vh] bg-fluoro-yellow rounded-full blur-[200px]" 
+          />
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.015]">
+             <motion.div style={{ y: backgroundY }}>
+                <BrandLogo size={600} />
+             </motion.div>
+          </div>
+      </div>
 
       <AnimatePresence>
         {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
@@ -237,13 +255,7 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      <div className="flex-1 flex flex-col relative">
-          {/* Atmosphere */}
-          <div className="fixed top-0 right-0 w-[50vw] h-[50vh] bg-fluoro-yellow rounded-full blur-[200px] opacity-[0.03] pointer-events-none z-0" />
-          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.015] pointer-events-none z-0">
-             <BrandLogo size={600} />
-          </div>
-
+      <div className="flex-1 flex flex-col relative z-10">
           <Header 
             userProfile={userProfile} 
             latency={latency} 
@@ -259,8 +271,6 @@ export default function App() {
              <Plus size={28} strokeWidth={3} />
           </button>
           
-          {/* Main Content Area - "Zero-G" Spacing */}
-          {/* Header is 70px. pt-28 (112px) leaves ~42px visual gap. Perfect for Zero-G feel. */}
           <main className="flex-1 w-full relative z-10 pt-28 px-6 md:px-12 md:pl-32 pb-24 transition-all duration-300">
             <motion.div
               key={activeTab}

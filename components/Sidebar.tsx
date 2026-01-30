@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Settings, Zap, PieChart, RefreshCw, Shield, TrendingUp } from 'lucide-react';
+import { Home, Settings, Zap, PieChart, RefreshCw, TrendingUp } from 'lucide-react';
 import { motion, useMotionTemplate, useMotionValue, useSpring } from 'framer-motion';
 
 interface SidebarProps {
@@ -110,7 +110,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
         <SidebarItem label="DATA" icon={PieChart} active={activeTab === 'analytics'} onClick={() => onTabChange('analytics')} />
         <SidebarItem label="EQUITIES" icon={TrendingUp} active={activeTab === 'equities'} onClick={() => onTabChange('equities')} />
         <SidebarItem label="EXCHANGE" icon={RefreshCw} active={activeTab === 'exchange'} onClick={() => onTabChange('exchange')} />
-        <SidebarItem label="INSURANCE" icon={Shield} active={activeTab === 'insurance'} onClick={() => onTabChange('insurance')} />
         <SidebarItem label="CONFIG" icon={Settings} active={activeTab === 'settings'} onClick={() => onTabChange('settings')} />
       </div>
 

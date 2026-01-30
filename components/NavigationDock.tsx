@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Settings, Zap, PieChart, TrendingUp, RefreshCw, Shield } from 'lucide-react';
+import { Home, Settings, Zap, PieChart, TrendingUp, RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface NavigationDockProps {
@@ -43,12 +43,11 @@ export const NavigationDock: React.FC<NavigationDockProps> = ({ activeTab, onTab
         </div>
         
         <div className="flex gap-1">
-            {/* New IA Order: HOME -> DATA -> EQUITIES -> EXCHANGE -> INSURANCE -> SETTINGS */}
+            {/* New IA Order: HOME -> DATA -> EQUITIES -> EXCHANGE -> SETTINGS */}
             <DockItem icon={Home} label="HOME" active={activeTab === 'dashboard'} onClick={() => onTabChange('dashboard')} />
             <DockItem icon={PieChart} label="DATA" active={activeTab === 'analytics'} onClick={() => onTabChange('analytics')} />
             <DockItem icon={TrendingUp} label="EQUITIES" active={activeTab === 'equities'} onClick={() => onTabChange('equities')} />
             <DockItem icon={RefreshCw} label="EXCHANGE" active={activeTab === 'exchange'} onClick={() => onTabChange('exchange')} />
-            <DockItem icon={Shield} label="INSURANCE" active={activeTab === 'insurance'} onClick={() => onTabChange('insurance')} />
             <DockItem icon={Settings} label="CONFIG" active={activeTab === 'settings'} onClick={() => onTabChange('settings')} />
         </div>
       </div>

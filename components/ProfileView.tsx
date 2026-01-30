@@ -95,7 +95,7 @@ const BiometricPulse = () => {
 };
 
 const TinySparkline = ({ color = "#666", data }: { color?: string, data: any[] }) => (
-    <div className="h-10 w-24">
+    <div className="h-10 w-24 min-w-0 min-h-0">
         <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data}>
                 <Line type="monotone" dataKey="value" stroke={color} strokeWidth={1} dot={false} isAnimationActive={true} />
@@ -314,7 +314,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                             <div className="text-[9px] font-mono text-neutral-500 mb-1 uppercase">Burn Rate (7D)</div>
                             <div className="text-lg font-bold text-white font-mono">$0.42<span className="text-xs text-neutral-600">/hr</span></div>
                         </div>
-                        <div className="flex-1 h-12 w-32">
+                        <div className="h-12 w-32 min-w-0 min-h-0 relative">
                              <ResponsiveContainer width="100%" height="100%">
                                 <LineChart data={burnData}>
                                     <Line type="step" dataKey="value" stroke="#444" strokeWidth={1} dot={false} strokeOpacity={0.8} />

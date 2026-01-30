@@ -24,7 +24,6 @@ export const HelpOverlay: React.FC<HelpOverlayProps> = ({ isOpen, onClose }) => 
     { id: '03', title: 'EQUITIES', desc: 'Traditional asset telemetry & alpha-vector metrics.' },
     { id: '04', title: 'EXCHANGE', desc: 'P2P Web3 enclaves & real-time gas-ping tracking.' },
     { id: '05', title: 'GOVERNANCE', desc: 'Directive-based stake weight & gravity voting.' },
-    { id: '06', title: 'INSURANCE', desc: 'Hex-grid risk shield & structural integrity audit.' },
   ];
 
   return (
