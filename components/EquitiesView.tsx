@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { 
   ResponsiveContainer, 
   LineChart, 
@@ -22,6 +22,22 @@ import {
 import { GlowCard } from './GlowCard';
 import { PageHeader } from './PageHeader';
 import { formatCurrency } from '../utils';
+
+// Animation Variants
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08
+    }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+};
 
 // --- Types ---
 interface Asset {
@@ -460,7 +476,12 @@ const GlobalIndicesTicker = () => {
 
 export const EquitiesView: React.FC = () => {
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000 pb-24 w-full">
+    <motion.div 
+      className="w-full pb-24"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
 
        <PageHeader 
          title="EQUITIES.COMMAND_CENTER"
@@ -474,26 +495,26 @@ export const EquitiesView: React.FC = () => {
        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
            
            {/* Tier 1: Alpha Vector (Chart) */}
-           <div className="lg:col-span-9">
+           <motion.div variants={itemVariants} className="lg:col-span-9">
                <GlowCard className="rounded-2xl p-0 h-full bg-[#0A0A0A] overflow-hidden">
                    <AlphaVectorChart />
                </GlowCard>
-           </div>
+           </motion.div>
 
            {/* Tier 2: Risk Spider (Radar) */}
-           <div className="lg:col-span-3">
+           <motion.div variants={itemVariants} className="lg:col-span-3">
                <GlowCard className="rounded-2xl p-6 h-full bg-[#0A0A0A]">
                    <RiskCorrelationSpider />
                </GlowCard>
-           </div>
+           </motion.div>
 
            {/* Tier 3: Trade Terminal (Command Line) */}
-           <div className="lg:col-span-12">
+           <motion.div variants={itemVariants} className="lg:col-span-12">
                <TradeCommitTerminal />
-           </div>
+           </motion.div>
 
            {/* Tier 4: Volatility Heatmap */}
-           <div className="lg:col-span-12">
+           <motion.div variants={itemVariants} className="lg:col-span-12">
                <div className="flex items-center gap-2 mb-4">
                    <Activity size={16} className="text-neutral-500" />
                    <h3 className="text-xs font-mono font-bold text-white uppercase tracking-widest">Volatility Heatmap</h3>
@@ -538,7 +559,7 @@ export const EquitiesView: React.FC = () => {
                        );
                    })}
                </div>
-           </div>
+           </motion.div>
        </div>
 
        {/* Feature 3: Audit_Log (Footer) */}
@@ -548,6 +569,6 @@ export const EquitiesView: React.FC = () => {
        <div className="fixed bottom-0 left-0 w-full z-40">
            <GlobalIndicesTicker />
        </div>
-    </div>
+    </motion.div>
   );
 };

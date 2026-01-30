@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { motion, animate } from 'framer-motion';
+import { motion, animate, Variants } from 'framer-motion';
 import { SparklineChart } from './SparklineChart';
 import { FinancialSummary, Transaction, UserProfile } from '../types';
 import { formatCurrency, generateCSV } from '../utils';
@@ -29,6 +29,23 @@ interface DashboardViewProps {
   onManageBalance: () => void;
   onShowToast: (msg: string) => void;
 }
+
+// Animation Variants
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05,
+      delayChildren: 0.1
+    }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+};
 
 // --- Kinetic Odometer Component ---
 const Odometer: React.FC<{ value: number; className?: string }> = ({ value, className = "" }) => {
@@ -60,7 +77,7 @@ const Odometer: React.FC<{ value: number; className?: string }> = ({ value, clas
 // --- Micro-KPI Card with Scanning Beam ---
 const MicroKPICard = ({ title, value, delta, icon: Icon }: { title: string, value: number, delta: string, icon: any }) => {
   return (
-    <GlowCard className="rounded-xl p-5 relative group cursor-default">
+    <GlowCard variants={itemVariants} className="rounded-xl p-5 relative group cursor-default">
       {/* Scanning Beam Animation */}
       <div 
          className="absolute top-0 left-0 w-full h-[5%] bg-gradient-to-b from-transparent via-white/10 to-transparent blur-md pointer-events-none z-20"
@@ -137,8 +154,6 @@ const TransactionMarquee: React.FC<{ transactions: Transaction[] }> = ({ transac
      const animateScroll = () => {
        if (!isPaused.current) {
          el.scrollLeft += scrollSpeed;
-         // Reset scroll when reaching the end of the first set (approx)
-         // A more robust way is to check scrollWidth
          if (el.scrollLeft >= el.scrollWidth / 2) {
             el.scrollLeft = 0;
          }
@@ -212,7 +227,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   };
 
   return (
-    <div className="w-full min-h-screen grid grid-cols-1 xl:grid-cols-12 gap-8 pb-12">
+    <motion.div 
+      className="w-full min-h-screen grid grid-cols-1 xl:grid-cols-12 gap-8 pb-12"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
        
        <style>{`
          @keyframes scanBeamVertical {
@@ -256,7 +276,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
 
           {/* 3. Central Visualization (High-Fidelity Sparkline) */}
-          <GlowCard className="rounded-2xl p-6 relative">
+          <GlowCard variants={itemVariants} className="rounded-2xl p-6 relative">
              <div className="flex justify-between items-center mb-6">
                 <div>
                    <h3 className="text-sm font-bold text-white">Cash Flow</h3>
@@ -283,7 +303,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
              {/* Recent Transactions Table */}
              <div className="lg:col-span-2">
-               <GlowCard className="rounded-2xl p-6 flex flex-col h-full">
+               <GlowCard variants={itemVariants} className="rounded-2xl p-6 flex flex-col h-full">
                   <div className="flex justify-between items-center mb-6">
                      <h3 className="text-xs font-bold text-white uppercase tracking-wider">Transaction Activity</h3>
                      <div className="flex gap-2 text-[10px] font-mono text-neutral-500">
@@ -314,7 +334,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
              {/* Budget Allocation Radial */}
              <div className="lg:col-span-1">
-               <GlowCard className="rounded-2xl p-6 flex flex-col h-full">
+               <GlowCard variants={itemVariants} className="rounded-2xl p-6 flex flex-col h-full">
                   <div className="flex justify-between items-center mb-2">
                      <h3 className="text-xs font-bold text-white uppercase tracking-wider">Allocation</h3>
                      <Activity size={14} className="text-neutral-500" />
@@ -378,6 +398,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           />
        </div>
 
-    </div>
+    </motion.div>
   );
 };

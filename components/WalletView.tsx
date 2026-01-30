@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useSpring, useMotionValue, useTransform, useMotionTemplate } from 'framer-motion';
+import { motion, AnimatePresence, useSpring, useMotionValue, useTransform, useMotionTemplate, Variants } from 'framer-motion';
 import { CreditCard, Plus, ArrowUpRight, Code, Server, Plane, Briefcase, Megaphone, ShoppingBag, Lock, Activity, Wifi } from 'lucide-react';
 import { FinancialSummary, Account } from '../types';
 import { GlowCard } from './GlowCard';
@@ -12,6 +12,22 @@ import { PageHeader } from './PageHeader';
 interface WalletViewProps {
   data: FinancialSummary;
 }
+
+// Animation Variants
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+};
 
 // --- Micro-Components ---
 
@@ -321,7 +337,12 @@ export const WalletView: React.FC<WalletViewProps> = ({ data }) => {
   const estimatedBurn = 1145 + 2300; 
 
   return (
-    <div className="w-full flex flex-col gap-8 relative">
+    <motion.div 
+      className="w-full flex flex-col gap-8 relative"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       
       {/* Background Atmosphere */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-fluoro-yellow/5 blur-[120px] rounded-full pointer-events-none -z-10" />
@@ -342,7 +363,7 @@ export const WalletView: React.FC<WalletViewProps> = ({ data }) => {
         <div className="lg:col-span-2 space-y-8">
           
           {/* Active Cards Section */}
-          <div>
+          <motion.div variants={itemVariants}>
               <div className="flex justify-between items-center mb-4">
                  <h3 className="font-mono text-[10px] text-neutral-500 tracking-widest uppercase">
                    ACTIVE_CARDS // {accounts.length.toString().padStart(2, '0')}
@@ -375,10 +396,10 @@ export const WalletView: React.FC<WalletViewProps> = ({ data }) => {
                   ))}
                 </AnimatePresence>
               </motion.div>
-          </div>
+          </motion.div>
 
           {/* Recurring Subscriptions: Burn-Rate Monitor */}
-          <div className="bg-[#0A0A0A]/60 backdrop-blur-md border border-neutral-800 rounded-2xl p-6 relative overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
+          <motion.div variants={itemVariants} className="bg-[#0A0A0A]/60 backdrop-blur-md border border-neutral-800 rounded-2xl p-6 relative overflow-hidden">
              <div className="flex items-center gap-3 mb-6">
                 <div className="p-1.5 bg-neutral-900 rounded border border-neutral-800">
                     <Activity size={14} className="text-neutral-500" />
@@ -422,15 +443,15 @@ export const WalletView: React.FC<WalletViewProps> = ({ data }) => {
                   </motion.div>
                 ))}
              </div>
-          </div>
+          </motion.div>
 
         </div>
 
         {/* Right Column: Balance & Actions (Refactored to Vault Utility Rail) */}
-        <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-700 delay-100">
+        <div className="space-y-6">
            
            {/* Total Balance Card */}
-           <div className="bg-[#080808] border border-neutral-800 rounded-2xl p-6 sticky top-24 overflow-hidden shadow-2xl">
+           <motion.div variants={itemVariants} className="bg-[#080808] border border-neutral-800 rounded-2xl p-6 sticky top-24 overflow-hidden shadow-2xl">
               <div className="absolute top-0 right-0 w-32 h-32 bg-fluoro-yellow/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
               
               <h3 className="font-mono text-[9px] text-neutral-500 mb-2 tracking-widest flex items-center gap-2">
@@ -455,10 +476,10 @@ export const WalletView: React.FC<WalletViewProps> = ({ data }) => {
               >
                 <Plus size={14} className="group-hover:rotate-90 transition-transform duration-300" /> ADD TRANSACTION
               </button>
-           </div>
+           </motion.div>
            
            {/* High-Density Recent Activity (Vertical List) */}
-           <div className="bg-[#0A0A0A] border border-neutral-800 rounded-2xl p-6">
+           <motion.div variants={itemVariants} className="bg-[#0A0A0A] border border-neutral-800 rounded-2xl p-6">
               <div className="flex items-center justify-between mb-4">
                  <h3 className="font-mono text-[10px] text-neutral-500 tracking-widest uppercase">LIVE_FEED</h3>
                  <div className="w-1.5 h-1.5 rounded-full bg-fluoro-yellow animate-pulse" />
@@ -484,10 +505,10 @@ export const WalletView: React.FC<WalletViewProps> = ({ data }) => {
                     )
                  })}
               </div>
-           </div>
+           </motion.div>
 
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

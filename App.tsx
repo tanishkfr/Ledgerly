@@ -274,15 +274,19 @@ export default function App() {
           
           {/* Main Content Anchor: 1440px Max Width, Centered, Sidebar Aware */}
           <main className="flex-1 w-full relative z-10 pt-28 px-6 md:pr-12 md:pl-32 pb-24 transition-all duration-300">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="w-full max-w-[1440px] mx-auto"
-            >
-              {renderContent()}
-            </motion.div>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, x: 20, scale: 0.98 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                exit={{ opacity: 0, x: -20, scale: 1.02 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                style={{ willChange: "transform, opacity" }}
+                className="w-full max-w-[1440px] mx-auto"
+              >
+                {renderContent()}
+              </motion.div>
+            </AnimatePresence>
             
             <footer className="w-full text-center py-12 z-10 relative mt-24 max-w-[1440px] mx-auto">
                <div className="flex flex-col items-center gap-2">

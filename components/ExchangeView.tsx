@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
+import { motion, useMotionValue, useTransform, Variants } from 'framer-motion';
 import { GlowCard } from './GlowCard';
 import { PageHeader } from './PageHeader';
 import { formatCurrency } from '../utils';
@@ -17,6 +17,22 @@ import {
   RefreshCw,
   Network
 } from 'lucide-react';
+
+// Animation Variants
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+};
 
 // --- Micro-Components ---
 
@@ -151,7 +167,7 @@ const TickerLog = ({ symbol }: { symbol: string }) => {
 };
 
 const AssetCard = ({ symbol, name, price, change }: { symbol: string, name: string, price: number, change: number }) => (
-  <GlowCard className="rounded-xl p-5 bg-[#0A0A0A] h-full flex flex-col justify-between group hover:border-neutral-700 transition-colors">
+  <GlowCard variants={itemVariants} className="rounded-xl p-5 bg-[#0A0A0A] h-full flex flex-col justify-between group hover:border-neutral-700 transition-colors">
       <div>
         <div className="flex justify-between items-start mb-4">
             <div className="flex items-center gap-3">
@@ -280,7 +296,7 @@ const ExecutionTerminal = () => {
     const [fromVal, setFromVal] = useState(1.0);
 
     return (
-        <GlowCard className="h-auto min-h-fit rounded-2xl p-6 pb-8 bg-[#080808] flex flex-col border border-neutral-800">
+        <GlowCard variants={itemVariants} className="h-auto min-h-fit rounded-2xl p-6 pb-8 bg-[#080808] flex flex-col border border-neutral-800">
             <div className="flex justify-between items-center mb-6 border-b border-neutral-800 pb-4 shrink-0">
                 <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
                     <Settings2 size={14} className="text-fluoro-yellow" /> Atomic Execution
@@ -410,7 +426,12 @@ export const ExchangeView: React.FC = () => {
   const [isHoveredHotWallet, setIsHoveredHotWallet] = useState(false);
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 w-full pb-24">
+    <motion.div 
+      className="w-full pb-24"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
        
        <PageHeader 
          title="EXCHANGE.P2P_VAULT" 
@@ -429,7 +450,8 @@ export const ExchangeView: React.FC = () => {
           <div className="lg:col-span-12 grid grid-cols-1 md:grid-cols-2 gap-6">
               
               {/* Hot Wallet */}
-              <div 
+              <motion.div 
+                variants={itemVariants}
                 onMouseEnter={() => setIsHoveredHotWallet(true)}
                 onMouseLeave={() => setIsHoveredHotWallet(false)}
               >
@@ -455,10 +477,10 @@ export const ExchangeView: React.FC = () => {
                       {/* System Diagnostic Graph (Replaces static loop) */}
                       <SystemDiagnosticGraph isHovered={isHoveredHotWallet} />
                   </GlowCard>
-              </div>
+              </motion.div>
 
               {/* Cold Vault */}
-              <div className="relative group rounded-2xl p-6 bg-[#050505] border border-neutral-800 hover:border-white/20 transition-all overflow-hidden">
+              <motion.div variants={itemVariants} className="relative group rounded-2xl p-6 bg-[#050505] border border-neutral-800 hover:border-white/20 transition-all overflow-hidden">
                   <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] bg-repeat" />
                   
                   <div className="flex justify-between items-start mb-8 relative z-10">
@@ -484,7 +506,7 @@ export const ExchangeView: React.FC = () => {
                           <Cpu size={12} /> HARDWARE_KEY_REQUIRED
                       </span>
                   </div>
-              </div>
+              </motion.div>
           </div>
 
           {/* 2. Token Matrix with Whale Watch */}
@@ -501,6 +523,6 @@ export const ExchangeView: React.FC = () => {
           </div>
 
        </div>
-    </div>
+    </motion.div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { FinancialSummary } from '../types';
 import { VelocityChart } from './VelocityChart';
 import { generateMockChartData, getDateLabels } from '../utils';
@@ -14,12 +14,21 @@ interface AnalyticsViewProps {
 type TimeRange = '1D' | '1W' | '1M' | '1Y' | 'ALL';
 type ViewMode = 'TOTAL_VOLUME' | 'NET_BURN';
 
-const KPICard = ({ title, value, sub, icon: Icon, delay }: { title: string, value: string, sub: string, icon: any, delay: number }) => (
-  <motion.div 
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay, duration: 0.5 }}
-  >
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+};
+
+const KPICard = ({ title, value, sub, icon: Icon }: { title: string, value: string, sub: string, icon: any }) => (
+  <motion.div variants={itemVariants} className="h-full">
       <GlowCard className="rounded-2xl p-6 relative overflow-hidden group h-full">
         <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-40 transition-opacity">
         <Icon size={40} className="text-neutral-500" />
@@ -96,7 +105,12 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ data }) => {
   }, [range, data]);
 
   return (
-    <div className="animate-in fade-in duration-500 w-full pb-24">
+    <motion.div 
+      className="w-full pb-24"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       
       <PageHeader 
         title="DATA.ANALYTICS"
@@ -113,30 +127,23 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ data }) => {
               value="94.2%" 
               sub="OPTIMAL_RANGE" 
               icon={Activity} 
-              delay={0.1} 
            />
            <KPICard 
               title="BURN_RATE" 
               value="$142.50/day" 
               sub="-12% VS LAST MONTH" 
               icon={Zap} 
-              delay={0.2} 
            />
            <KPICard 
               title="FORECAST_YIELD" 
               value="+$4,200" 
               sub="PROJECTED EOM" 
               icon={TrendingUp} 
-              delay={0.3} 
            />
         </div>
 
         {/* Main Chart Container */}
-        <motion.div 
-           initial={{ opacity: 0, scale: 0.98 }}
-           animate={{ opacity: 1, scale: 1 }}
-           transition={{ delay: 0.4 }}
-        >
+        <motion.div variants={itemVariants}>
            <GlowCard className="rounded-2xl p-6 relative">
                 {/* Chart Header & Controls */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -203,6 +210,6 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ data }) => {
            </GlowCard>
         </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { Shield, CreditCard, Key, AlertTriangle, Activity, Save, Terminal, User, Cpu } from 'lucide-react';
 import { UserProfile } from '../types';
 import { GlowCard } from './GlowCard';
@@ -10,6 +10,22 @@ interface ProfileViewProps {
   initialProfile: UserProfile;
   onSave: (profile: Partial<UserProfile>) => void;
 }
+
+// Animation Variants
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+};
 
 // --- Micro-Components ---
 
@@ -144,7 +160,12 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   const burnData = Array.from({ length: 15 }).map(() => ({ value: Math.random() * 50 + 20 }));
 
   return (
-    <div className="relative animate-in fade-in duration-500 w-full min-h-screen pb-24 overflow-hidden">
+    <motion.div 
+      className="relative w-full min-h-screen pb-24 overflow-hidden"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       
       <PageHeader 
         title="USER.CONFIG"
@@ -155,7 +176,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
         
         {/* 1. General Settings: The "Biometric" Identity */}
-        <div className="lg:col-span-2">
+        <motion.div variants={itemVariants} className="lg:col-span-2">
             <GlowCard className="h-full rounded-2xl p-8 relative flex flex-col justify-between bg-[#0A0A0A]">
                 <div className="absolute top-4 right-4 text-[8px] font-mono text-neutral-600 tracking-widest">CFG_MODULE_01 // BIO_ID</div>
                 
@@ -224,10 +245,10 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                     </button>
                 </div>
             </GlowCard>
-        </div>
+        </motion.div>
 
         {/* 2. Security Settings: "Active Defense" */}
-        <div className="lg:col-span-1">
+        <motion.div variants={itemVariants} className="lg:col-span-1">
             <GlowCard className="h-full rounded-2xl p-6 relative flex flex-col bg-[#0A0A0A]">
                 <div className="absolute top-4 right-4 text-[8px] font-mono text-neutral-600 tracking-widest">SEC_ALPHA // DEFENSE</div>
                 
@@ -260,10 +281,10 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                     <AlertTriangle size={12} /> SYSTEM_PURGE
                 </button>
             </GlowCard>
-        </div>
+        </motion.div>
 
         {/* 3. API Sandbox */}
-        <div className="lg:col-span-1">
+        <motion.div variants={itemVariants} className="lg:col-span-1">
             <GlowCard className="h-full rounded-2xl p-6 relative bg-[#0A0A0A]">
                 <div className="absolute top-4 right-4 text-[8px] font-mono text-neutral-600 tracking-widest">DEV_SANDBOX // API</div>
                 
@@ -289,10 +310,10 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                     <TinySparkline data={rpsData} color="#333" />
                 </div>
             </GlowCard>
-        </div>
+        </motion.div>
 
         {/* 4. Billing Sandbox */}
-        <div className="lg:col-span-2">
+        <motion.div variants={itemVariants} className="lg:col-span-2">
              <GlowCard className="h-full rounded-2xl p-6 relative bg-[#0A0A0A]">
                 <div className="absolute top-4 right-4 text-[8px] font-mono text-neutral-600 tracking-widest">FIN_MOD // BILLING</div>
                 
@@ -324,9 +345,9 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                     </div>
                 </div>
              </GlowCard>
-        </div>
+        </motion.div>
 
       </div>
-    </div>
+    </motion.div>
   );
 };
