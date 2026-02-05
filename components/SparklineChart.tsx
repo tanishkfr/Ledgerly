@@ -25,15 +25,18 @@ export const SparklineChart: React.FC<SparklineChartProps> = ({ data }) => {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
+    // Prevent render during initial layout calculations
+    const timer = setTimeout(() => setIsMounted(true), 100);
+    return () => clearTimeout(timer);
   }, []);
 
+  if (!isMounted) return <div className="w-full h-full min-h-[150px] bg-neutral-900/10 rounded-lg" />;
+
   return (
-    // Size Guard: Fixed min-height ensures chart has dimension to render into
+    // Fixed Min-Height Guard
     <div className="w-full h-full min-h-[150px] min-w-0 relative overflow-hidden rounded-lg group">
-      {isMounted && (
-        // 99% Width Hack: Prevents resize loops in flex/grid
-        <ResponsiveContainer width="99%" height="100%">
+        {/* 99% Width Hack + Debounce prevents ResizeObserver loop errors */}
+        <ResponsiveContainer width="99%" height="100%" debounce={100}>
             <AreaChart data={data}>
             <defs>
                 <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
@@ -76,7 +79,6 @@ export const SparklineChart: React.FC<SparklineChartProps> = ({ data }) => {
             />
             </AreaChart>
         </ResponsiveContainer>
-      )}
     </div>
   );
 };

@@ -283,7 +283,12 @@ const TradeCommitTerminal = () => {
 
 const AlphaVectorChart = () => {
     const [isMounted, setIsMounted] = useState(false);
-    useEffect(() => setIsMounted(true), []);
+    
+    // Mount Guard
+    useEffect(() => {
+        const timer = setTimeout(() => setIsMounted(true), 100);
+        return () => clearTimeout(timer);
+    }, []);
 
     const intersections = useMemo(() => {
         const points = [];
@@ -312,8 +317,8 @@ const AlphaVectorChart = () => {
                  </div>
                  
                  <div className="flex-1 relative min-h-[250px] min-w-0">
-                    {isMounted && (
-                        <ResponsiveContainer width="99%" height="100%">
+                    {isMounted ? (
+                        <ResponsiveContainer width="99%" height="99%" debounce={100}>
                             <LineChart data={CHART_DATA}>
                                 <Tooltip 
                                     content={({ active, payload }) => {
@@ -366,6 +371,10 @@ const AlphaVectorChart = () => {
                                 ))}
                             </LineChart>
                         </ResponsiveContainer>
+                    ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-neutral-900/10">
+                            <span className="text-[9px] font-mono text-neutral-600 animate-pulse">INIT...</span>
+                        </div>
                     )}
 
                     {/* Scanning Line Effect (CSS) */}
@@ -394,7 +403,12 @@ const AlphaVectorChart = () => {
 
 const RiskCorrelationSpider = () => {
     const [isMounted, setIsMounted] = useState(false);
-    useEffect(() => setIsMounted(true), []);
+    
+    // Mount Guard
+    useEffect(() => {
+        const timer = setTimeout(() => setIsMounted(true), 100);
+        return () => clearTimeout(timer);
+    }, []);
 
     return (
         <div className="h-[280px] w-full min-w-0 min-h-0 relative flex flex-col">
@@ -407,8 +421,8 @@ const RiskCorrelationSpider = () => {
             </div>
             
             <div className="flex-1 -ml-6 min-h-[250px] min-w-0">
-                {isMounted && (
-                    <ResponsiveContainer width="99%" height="100%">
+                {isMounted ? (
+                    <ResponsiveContainer width="99%" height="99%" debounce={100}>
                         <RadarChart cx="50%" cy="50%" outerRadius="70%" data={RADAR_DATA}>
                             <PolarGrid stroke="#1A1A1A" />
                             <PolarAngleAxis dataKey="subject" tick={{ fill: '#333', fontSize: 8, fontFamily: 'JetBrains Mono' }} />
@@ -423,6 +437,8 @@ const RiskCorrelationSpider = () => {
                             />
                         </RadarChart>
                     </ResponsiveContainer>
+                ) : (
+                    <div className="w-full h-full bg-neutral-900/10 rounded-full animate-pulse" />
                 )}
             </div>
         </div>

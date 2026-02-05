@@ -110,15 +110,25 @@ const BiometricPulse = () => {
   );
 };
 
-const TinySparkline = ({ color = "#666", data }: { color?: string, data: any[] }) => (
-    <div className="h-10 w-24 min-w-0 min-h-0">
-        <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data}>
-                <Line type="monotone" dataKey="value" stroke={color} strokeWidth={1} dot={false} isAnimationActive={true} />
-            </LineChart>
-        </ResponsiveContainer>
-    </div>
-);
+const TinySparkline = ({ color = "#666", data }: { color?: string, data: any[] }) => {
+    const [isMounted, setIsMounted] = useState(false);
+    useEffect(() => {
+        const t = setTimeout(() => setIsMounted(true), 100);
+        return () => clearTimeout(t);
+    }, []);
+
+    return (
+        <div className="h-10 w-24 min-w-0 min-h-0">
+            {isMounted ? (
+                <ResponsiveContainer width="99%" height="99%" debounce={100}>
+                    <LineChart data={data}>
+                        <Line type="monotone" dataKey="value" stroke={color} strokeWidth={1} dot={false} isAnimationActive={true} />
+                    </LineChart>
+                </ResponsiveContainer>
+            ) : <div className="w-full h-full bg-neutral-900/10 rounded" />}
+        </div>
+    );
+};
 
 // --- Main Component ---
 
@@ -130,6 +140,16 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   const [isCommitting, setIsCommitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [bioInput, setBioInput] = useState("Full-stack systems architect specializing in high-frequency trading interfaces.");
+  
+  // Chart Data (Mock)
+  const rpsData = Array.from({ length: 15 }).map((_, i) => ({ name: i, value: Math.random() * 100 }));
+  const burnData = Array.from({ length: 15 }).map((_, i) => ({ name: i, value: Math.random() * 50 + 20 }));
+
+  const [isChartMounted, setIsChartMounted] = useState(false);
+  useEffect(() => {
+      const t = setTimeout(() => setIsChartMounted(true), 100);
+      return () => clearTimeout(t);
+  }, []);
 
   // Sync internal state if prop updates
   useEffect(() => {
@@ -155,9 +175,6 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         if (onSave) onSave(formData);
     }, 1200);
   };
-
-  const rpsData = Array.from({ length: 15 }).map(() => ({ value: Math.random() * 100 }));
-  const burnData = Array.from({ length: 15 }).map(() => ({ value: Math.random() * 50 + 20 }));
 
   return (
     <motion.div 
@@ -336,11 +353,13 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                             <div className="text-lg font-bold text-white font-mono">$0.42<span className="text-xs text-neutral-600">/hr</span></div>
                         </div>
                         <div className="h-12 w-32 min-w-0 min-h-0 relative">
-                             <ResponsiveContainer width="100%" height="100%">
-                                <LineChart data={burnData}>
-                                    <Line type="step" dataKey="value" stroke="#444" strokeWidth={1} dot={false} strokeOpacity={0.8} />
-                                </LineChart>
-                            </ResponsiveContainer>
+                             {isChartMounted ? (
+                                <ResponsiveContainer width="99%" height="99%" debounce={100}>
+                                    <LineChart data={burnData}>
+                                        <Line type="step" dataKey="value" stroke="#444" strokeWidth={1} dot={false} strokeOpacity={0.8} />
+                                    </LineChart>
+                                </ResponsiveContainer>
+                             ) : <div className="w-full h-full bg-neutral-900/10 rounded" />}
                         </div>
                     </div>
                 </div>

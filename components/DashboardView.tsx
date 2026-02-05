@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { motion, animate, Variants } from 'framer-motion';
 import { SparklineChart } from './SparklineChart';
 import { FinancialSummary, Transaction, UserProfile } from '../types';
@@ -221,6 +221,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
      { name: 'Software', value: 200, color: '#262626' },
   ];
 
+  const [isChartMounted, setIsChartMounted] = useState(false);
+  useEffect(() => {
+     const t = setTimeout(() => setIsChartMounted(true), 100);
+     return () => clearTimeout(t);
+  }, []);
+
   const handleExport = () => {
     generateCSV(data.recentTransactions);
     onShowToast("SYSTEM_STATUS: EXPORT_SUCCESS");
@@ -342,28 +348,33 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   
                   {/* Fixed Height Wrapper for ResponsiveContainer */}
                   <div className="h-[250px] w-full relative min-w-0 min-h-0 flex items-center justify-center">
-                     <ResponsiveContainer width="100%" height="100%">
-                        <RePieChart>
-                           <Pie
-                              data={allocationData}
-                              cx="50%"
-                              cy="50%"
-                              innerRadius={60}
-                              outerRadius={80}
-                              paddingAngle={5}
-                              dataKey="value"
-                              stroke="none"
-                           >
-                              {allocationData.map((entry, index) => (
-                                 <Cell key={`cell-${index}`} fill={entry.color} />
-                              ))}
-                           </Pie>
-                           <ReTooltip 
-                             contentStyle={{ backgroundColor: '#000', borderColor: '#333', borderRadius: '8px' }}
-                             itemStyle={{ color: '#fff', fontSize: '12px', fontFamily: 'monospace' }}
-                           />
-                        </RePieChart>
-                     </ResponsiveContainer>
+                     {isChartMounted ? (
+                        <ResponsiveContainer width="99%" height="99%" debounce={100}>
+                           <RePieChart>
+                              <Pie
+                                 data={allocationData}
+                                 cx="50%"
+                                 cy="50%"
+                                 innerRadius={60}
+                                 outerRadius={80}
+                                 paddingAngle={5}
+                                 dataKey="value"
+                                 stroke="none"
+                              >
+                                 {allocationData.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={entry.color} />
+                                 ))}
+                              </Pie>
+                              <ReTooltip 
+                                contentStyle={{ backgroundColor: '#000', borderColor: '#333', borderRadius: '8px' }}
+                                itemStyle={{ color: '#fff', fontSize: '12px', fontFamily: 'monospace' }}
+                              />
+                           </RePieChart>
+                        </ResponsiveContainer>
+                     ) : (
+                        <div className="w-full h-full bg-neutral-900/10 rounded-full animate-pulse" />
+                     )}
+                     
                      {/* Center Stats */}
                      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                         <span className="text-2xl font-bold text-white">100%</span>
