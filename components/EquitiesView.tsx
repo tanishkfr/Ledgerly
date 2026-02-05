@@ -17,8 +17,7 @@ import {
   AlertTriangle,
   Zap,
   CheckCircle2,
-  Clock,
-  Filter
+  Clock
 } from 'lucide-react';
 import { GlowCard } from './GlowCard';
 import { PageHeader } from './PageHeader';
@@ -48,23 +47,22 @@ interface Asset {
   delta: number;
   volatility: 'LOW' | 'MED' | 'HIGH';
   holdings: number;
-  sector: 'TECH' | 'CRYPTO' | 'AUTO' | 'FINANCE' | 'ETF';
 }
 
 // --- Mock Data ---
 const HEATMAP_DATA: Asset[] = [
-  { symbol: 'NVDA', name: 'Nvidia Corp', price: 842.50, delta: 5.4, volatility: 'HIGH', holdings: 12, sector: 'TECH' },
-  { symbol: 'BTC', name: 'Bitcoin', price: 64200.00, delta: -1.2, volatility: 'MED', holdings: 0.5, sector: 'CRYPTO' },
-  { symbol: 'AAPL', name: 'Apple Inc', price: 172.40, delta: 0.4, volatility: 'LOW', holdings: 45, sector: 'TECH' },
-  { symbol: 'ETH', name: 'Ethereum', price: 3450.20, delta: -0.8, volatility: 'MED', holdings: 4.2, sector: 'CRYPTO' },
-  { symbol: 'TSLA', name: 'Tesla Inc', price: 175.20, delta: 6.5, volatility: 'HIGH', holdings: 20, sector: 'AUTO' },
-  { symbol: 'SOL', name: 'Solana', price: 145.00, delta: 8.2, volatility: 'HIGH', holdings: 150, sector: 'CRYPTO' },
-  { symbol: 'MSFT', name: 'Microsoft', price: 420.10, delta: 0.1, volatility: 'LOW', holdings: 10, sector: 'TECH' },
-  { symbol: 'GOOGL', name: 'Alphabet', price: 150.50, delta: 0.2, volatility: 'LOW', holdings: 15, sector: 'TECH' },
-  { symbol: 'AMD', name: 'Adv Micro Dev', price: 180.00, delta: 3.1, volatility: 'HIGH', holdings: 30, sector: 'TECH' },
-  { symbol: 'PLTR', name: 'Palantir', price: 24.50, delta: 1.5, volatility: 'MED', holdings: 100, sector: 'TECH' },
-  { symbol: 'COIN', name: 'Coinbase', price: 240.00, delta: 5.8, volatility: 'HIGH', holdings: 15, sector: 'FINANCE' },
-  { symbol: 'SPY', name: 'SPDR S&P 500', price: 510.00, delta: 0.05, volatility: 'LOW', holdings: 5, sector: 'ETF' },
+  { symbol: 'NVDA', name: 'Nvidia Corp', price: 842.50, delta: 5.4, volatility: 'HIGH', holdings: 12 },
+  { symbol: 'BTC', name: 'Bitcoin', price: 64200.00, delta: -1.2, volatility: 'MED', holdings: 0.5 },
+  { symbol: 'AAPL', name: 'Apple Inc', price: 172.40, delta: 0.4, volatility: 'LOW', holdings: 45 },
+  { symbol: 'ETH', name: 'Ethereum', price: 3450.20, delta: -0.8, volatility: 'MED', holdings: 4.2 },
+  { symbol: 'TSLA', name: 'Tesla Inc', price: 175.20, delta: 6.5, volatility: 'HIGH', holdings: 20 },
+  { symbol: 'SOL', name: 'Solana', price: 145.00, delta: 8.2, volatility: 'HIGH', holdings: 150 },
+  { symbol: 'MSFT', name: 'Microsoft', price: 420.10, delta: 0.1, volatility: 'LOW', holdings: 10 },
+  { symbol: 'GOOGL', name: 'Alphabet', price: 150.50, delta: 0.2, volatility: 'LOW', holdings: 15 },
+  { symbol: 'AMD', name: 'Adv Micro Dev', price: 180.00, delta: 3.1, volatility: 'HIGH', holdings: 30 },
+  { symbol: 'PLTR', name: 'Palantir', price: 24.50, delta: 1.5, volatility: 'MED', holdings: 100 },
+  { symbol: 'COIN', name: 'Coinbase', price: 240.00, delta: 5.8, volatility: 'HIGH', holdings: 15 },
+  { symbol: 'SPY', name: 'SPDR S&P 500', price: 510.00, delta: 0.05, volatility: 'LOW', holdings: 5 },
 ];
 
 const CHART_DATA = Array.from({ length: 40 }).map((_, i) => ({
@@ -487,14 +485,6 @@ const GlobalIndicesTicker = () => {
 // --- Main View ---
 
 export const EquitiesView: React.FC = () => {
-  const [filterMode, setFilterMode] = useState<'ALL' | 'HIGH_VOL' | 'TECH' | 'CRYPTO'>('ALL');
-
-  const filteredData = useMemo(() => {
-    if (filterMode === 'ALL') return HEATMAP_DATA;
-    if (filterMode === 'HIGH_VOL') return HEATMAP_DATA.filter(a => a.volatility === 'HIGH');
-    return HEATMAP_DATA.filter(a => a.sector === filterMode);
-  }, [filterMode]);
-
   return (
     <motion.div 
       className="w-full pb-24 isolate"
@@ -535,43 +525,18 @@ export const EquitiesView: React.FC = () => {
 
            {/* Tier 4: Volatility Heatmap */}
            <motion.div variants={itemVariants} className="lg:col-span-12">
-               <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-                   <div className="flex items-center gap-2">
-                        <Activity size={16} className="text-neutral-500" />
-                        <h3 className="text-xs font-mono font-bold text-white uppercase tracking-widest">Volatility Heatmap</h3>
-                        <div className="h-4 w-[1px] bg-neutral-800 mx-2" />
-                        <span className="text-[9px] font-mono text-neutral-600">COUNT: {filteredData.length}</span>
-                   </div>
-
-                   {/* Filter Controls */}
-                   <div className="flex bg-neutral-900/50 p-1 rounded-lg border border-neutral-800">
-                        {(['ALL', 'HIGH_VOL', 'TECH', 'CRYPTO'] as const).map((mode) => (
-                            <button
-                                key={mode}
-                                onClick={() => setFilterMode(mode)}
-                                className={`px-3 py-1.5 rounded-md text-[9px] font-mono font-bold transition-all duration-300 ${
-                                    filterMode === mode
-                                        ? 'bg-neutral-800 text-white shadow-sm border border-neutral-700'
-                                        : 'text-neutral-500 hover:text-neutral-300'
-                                }`}
-                            >
-                                {mode.replace('_', ' ')}
-                            </button>
-                        ))}
-                   </div>
+               <div className="flex items-center gap-2 mb-4">
+                   <Activity size={16} className="text-neutral-500" />
+                   <h3 className="text-xs font-mono font-bold text-white uppercase tracking-widest">Volatility Heatmap</h3>
+                   <div className="h-[1px] flex-1 bg-neutral-900" />
+                   <span className="text-[9px] font-mono text-neutral-600">FILTER: ALL_ASSETS</span>
                </div>
                
-               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 isolate min-h-[120px]">
-                   <AnimatePresence mode='popLayout'>
-                   {filteredData.map((asset) => {
+               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 isolate">
+                   {HEATMAP_DATA.map((asset) => {
                        return (
                            <GlowCard
                               key={asset.symbol}
-                              layout
-                              initial={{ opacity: 0, scale: 0.9 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              exit={{ opacity: 0, scale: 0.9 }}
-                              transition={{ duration: 0.3 }}
                               className={`
                                 rounded-xl p-4 cursor-pointer relative group overflow-hidden transition-all
                                 border border-neutral-800 hover:border-fluoro-yellow/50
@@ -595,23 +560,14 @@ export const EquitiesView: React.FC = () => {
                                    </div>
                                </div>
 
-                               {/* Hover HUD - Advanced */}
-                               <div className="absolute inset-0 bg-black/95 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center text-center p-4 z-20 border border-fluoro-yellow/20">
-                                   <div className="text-[10px] font-mono text-neutral-400 mb-1 tracking-wider uppercase">{asset.name}</div>
-                                   <div className="text-2xl font-bold text-white font-sans tracking-tight mb-1">{formatCurrency(asset.price)}</div>
-                                   <div className={`text-xs font-mono font-bold ${asset.delta > 0 ? 'text-green-500' : 'text-red-500'}`}>
-                                      {asset.delta > 0 ? '+' : ''}{asset.delta}%
-                                   </div>
-                                   <div className="mt-3 text-[8px] font-mono text-neutral-600 border border-neutral-800 px-2 py-1 rounded-full flex items-center gap-2 uppercase tracking-widest">
-                                      <span>{asset.sector}</span>
-                                      <span className="w-0.5 h-2 bg-neutral-800" />
-                                      <span className={asset.volatility === 'HIGH' ? 'text-fluoro-yellow' : ''}>{asset.volatility}</span>
-                                   </div>
+                               {/* Hover HUD - Simplified */}
+                               <div className="absolute inset-0 bg-black/90 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-center p-2 z-20">
+                                   <div className="text-[9px] font-mono text-neutral-500 uppercase tracking-wider mb-1">Delta_1H</div>
+                                   <div className="text-lg font-bold text-white font-mono">{asset.delta > 0 ? '+' : ''}{asset.delta}%</div>
                                </div>
                            </GlowCard>
                        );
                    })}
-                   </AnimatePresence>
                </div>
            </motion.div>
        </div>
